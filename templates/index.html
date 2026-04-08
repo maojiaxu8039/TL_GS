@@ -772,6 +772,14 @@ body {
   </div>
 </div>
 
+<!-- IMAGE PREVIEW MODAL -->
+<div class="modal-overlay" id="imgPreviewModal" style="cursor:pointer" onclick="closeImgPreview()">
+  <div style="position:relative;max-width:90vw;max-height:90vh;text-align:center">
+    <img id="imgPreviewSrc" src="" style="max-width:90vw;max-height:90vh;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.6)" />
+    <div style="position:fixed;top:16px;right:24px;color:#fff;font-size:24px;line-height:1">✕</div>
+  </div>
+</div>
+
 <!-- SETTINGS MODAL -->
 <div class="modal-overlay" id="settingsModal">
   <div class="modal-box" style="max-width:500px">
@@ -1164,7 +1172,7 @@ function openModal(id) {
       '<div style="margin-top:12px"><div class="modal-section-title">🎯 策略加点</div>' +
       '<div style="display:flex;flex-wrap:wrap;gap:8px">' +
       s.build_imgs.map(function(url) {
-        return '<img src="' + url + '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1.5px solid rgba(99,179,237,.3);cursor:pointer" onclick="window.open(this.src)" />';
+        return '<img src="' + url + '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1.5px solid rgba(99,179,237,.3);cursor:pointer" onclick="openImgPreview(this.src)" />';
       }).join("") +
       '</div></div>'
     ) : "") +
@@ -1358,6 +1366,14 @@ function recalcModalTotals() {
 }
 
 // ========== UTIL ==========
+function openImgPreview(url) {
+  document.getElementById("imgPreviewSrc").src = url;
+  document.getElementById("imgPreviewModal").classList.add("open");
+}
+function closeImgPreview() {
+  document.getElementById("imgPreviewModal").classList.remove("open");
+}
+
 function escHtml(str) {
   if (str == null) return "";
   return String(str)
