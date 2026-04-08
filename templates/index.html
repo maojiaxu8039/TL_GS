@@ -1051,11 +1051,10 @@ function loadRecommendations() {
               '<span style="color:var(--muted);font-size:12px">⏱ ' + escHtml(s.avg_duration || "--") + '</span>' +
             '</div>' +
           '</div>' +
-          attrHtml +
           '<div class="rc-kpi">' +
             '<div class="kpi-cell kpi-fire"><div class="kpi-label">成本</div><div class="kpi-val" style="color:var(--fire)">' + (costVal > 0 ? costVal.toFixed(2) + '🔥' : '--') + '</div></div>' +
-            '<div class="kpi-cell kpi-fire"><div class="kpi-label">掉落</div><div class="kpi-val" style="color:var(--fire)">' + (dropValue > 0 ? dropValue.toFixed(2) + '🔥' : '--') + '</div></div>' +
-            '<div class="kpi-cell kpi-profit ' + profitClass + '"><div class="kpi-label">净收益/时</div><div class="kpi-val">' + profitSign + (profit * (60/durMins)).toFixed(1) + '🔥</div></div>' +
+            '<div class="kpi-cell"><div class="kpi-label">DPS</div><div class="kpi-val" style="color:var(--fire)">' + (dpsVal > 0 ? dpsVal.toLocaleString() : '--') + '</div></div>' +
+            '<div class="kpi-cell"><div class="kpi-label">生存</div><div class="kpi-val" style="color:var(--fire)">' + (survVal > 0 ? survVal.toLocaleString() : '--') + '</div></div>' +
           '</div>' +
           '<div class="rc-foot">' +
             buildImgsHtml +
