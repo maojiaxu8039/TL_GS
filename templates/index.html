@@ -1060,11 +1060,12 @@ function openModal(id) {
     return '<tr class="drop-row" data-idx="' + idx + '">' +
       '<td><input type="text" class="drop-name-input" data-type="drop" data-idx="' + idx + '" value="' + escHtml(item.name) + '" placeholder="输入物品名" onblur="onDropNameBlur(this)" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:4px 6px;font-size:12px" /></td>' +
       '<td style="color:var(--fire)" class="drop-price" data-price="' + (item.price || 0) + '">' + (item.price_display || "--") + '</td>' +
-      '<td><input type="number" class="cnt-input drop-cnt-input" data-type="drop" data-idx="' + idx + '" value="' + item.count + '" min="0" oninput="recalcModalTotals()" style="width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:3px 6px;font-size:12px;text-align:center" /></td>' +
+      '<td><input type="number" class="cnt-input drop-cnt-input" data-type="drop" data-idx="' + idx + '" value="' + item.count + '" min="0" data-price="' + (item.price || 0) + '" oninput="recalcModalTotals()" style="width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:3px 6px;font-size:12px;text-align:center" /></td>' +
+      '<td style="color:var(--fire)" class="drop-total">' + ((item.price || 0) * item.count).toFixed(2) + '</td>' +
       '<td><button onclick="delModalRow(this)" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:14px" title="删除">✕</button></td>' +
     '</tr>';
   }).join("");
-  dropRows += '<tr><td colspan="4" style="padding:4px;text-align:left"><button onclick="addDropRow()" style="background:var(--surface2);border:1px dashed var(--border);border-radius:6px;color:var(--muted);cursor:pointer;padding:4px 12px;font-size:12px">+ 添加核心掉落</button></td></tr>';
+  dropRows += '<tr><td colspan="5" style="padding:4px;text-align:left"><button onclick="addDropRow()" style="background:var(--surface2);border:1px dashed var(--border);border-radius:6px;color:var(--muted);cursor:pointer;padding:4px 12px;font-size:12px">+ 添加核心掉落</button></td></tr>';
 
   document.getElementById("modalTitle").textContent = s.name;
   document.getElementById("modalBody").innerHTML =
@@ -1232,7 +1233,7 @@ function addCostRow() {
   row.className = "cost-row";
   row.innerHTML = '<td><input type="text" class="cost-name-input" data-type="cost" value="" placeholder="输入物品名" onblur="onCostNameBlur(this)" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:4px 6px;font-size:12px" /></td>' +
     '<td style="color:var(--fire)" class="cost-price">--</td>' +
-    '<td><input type="number" class="cnt-input cost-cnt-input" data-type="cost" value="1" min="0" oninput="recalcModalTotals()" style="width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:3px 6px;font-size:12px;text-align:center" /></td>' +
+    '<td><input type="number" class="cnt-input cost-cnt-input" data-type="cost" value="1" min="0" data-price="0" oninput="recalcModalTotals()" style="width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:3px 6px;font-size:12px;text-align:center" /></td>' +
     '<td style="color:var(--fire)" class="cost-total">--</td>' +
     '<td><button onclick="delModalRow(this)" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:14px" title="删除">✕</button></td>';
   tbody.insertBefore(row, tbody.lastElementChild);
@@ -1244,7 +1245,8 @@ function addDropRow() {
   row.className = "drop-row";
   row.innerHTML = '<td><input type="text" class="drop-name-input" data-type="drop" value="" placeholder="输入物品名" onblur="onDropNameBlur(this)" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:4px 6px;font-size:12px" /></td>' +
     '<td style="color:var(--fire)" class="drop-price">--</td>' +
-    '<td><input type="number" class="cnt-input drop-cnt-input" data-type="drop" value="1" min="0" style="width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:3px 6px;font-size:12px;text-align:center" /></td>' +
+    '<td><input type="number" class="cnt-input drop-cnt-input" data-type="drop" value="1" min="0" data-price="0" oninput="recalcModalTotals()" style="width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:3px 6px;font-size:12px;text-align:center" /></td>' +
+    '<td style="color:var(--fire)" class="drop-total">--</td>' +
     '<td><button onclick="delModalRow(this)" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:14px" title="删除">✕</button></td>';
   tbody.insertBefore(row, tbody.lastElementChild);
 }
@@ -1258,7 +1260,7 @@ function recalcModalTotals() {
   // Recalc cost subtotals + total
   var costTotal = 0;
   document.querySelectorAll(".cost-row").forEach(function(tr) {
-    var price = parseFloat(tr.querySelector(".cost-price").dataset.price) || 0;
+    var price = parseFloat(tr.querySelector(".cost-cnt-input").dataset.price) || 0;
     var cnt = parseFloat(tr.querySelector(".cost-cnt-input").value) || 0;
     var sub = price * cnt;
     costTotal += sub;
@@ -1268,12 +1270,15 @@ function recalcModalTotals() {
   var mct = document.getElementById("mCostTotal");
   if (mct) mct.textContent = costTotal > 0 ? costTotal.toFixed(2) + " 🔥" : "--";
 
-  // Recalc drop value
+  // Recalc drop subtotals + value
   var dropTotal = 0;
   document.querySelectorAll(".drop-row").forEach(function(tr) {
-    var price = parseFloat(tr.querySelector(".drop-price").dataset.price) || 0;
+    var price = parseFloat(tr.querySelector(".drop-cnt-input").dataset.price) || 0;
     var cnt = parseFloat(tr.querySelector(".drop-cnt-input").value) || 0;
-    dropTotal += price * cnt;
+    var sub = price * cnt;
+    dropTotal += sub;
+    var tc = tr.querySelector(".drop-total");
+    if (tc) tc.textContent = sub > 0 ? sub.toFixed(2) : "--";
   });
   var mdv = document.getElementById("mDropValue");
   if (mdv) mdv.textContent = dropTotal.toFixed(2) + " 🔥";
