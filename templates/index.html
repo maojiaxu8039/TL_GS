@@ -1020,9 +1020,7 @@ function renderStrategies() {
 
 function renderRow(s, fp) {
   // 收益估算 = 掉落总价值 - 成本
-  var dropValue = (s.enriched_core_drops || []).reduce(function (sum, d) {
-    return sum + ((d.price || 0) * (d.count || 1));
-  }, 0);
+  var dropValue = s.total_drop_fire || 0;
   var profit = dropValue - (s.total_cost_fire || 0);
   var roi = s.total_cost_fire > 0 ? ((dropValue / s.total_cost_fire - 1) * 100) : 0;
 
@@ -1040,8 +1038,8 @@ function renderRow(s, fp) {
   var roiDisplay = roi !== 0 && fp > 0
     ? '<span class="td-roi">' + (roi >= 0 ? "+" : "") + roi.toFixed(1) + '%</span>'
     : '<span style="color:var(--muted)">--</span>';
-  var perHour = fp > 0 && s.total_cost_fire > 0 && s.avg_duration
-    ? dropValue * (60 / parseDurationToMinutes(s.avg_duration))
+  var perHour = s.total_cost_fire > 0 && s.avg_duration
+    ? profit * (60 / parseDurationToMinutes(s.avg_duration))
     : null;
   var perHourDisplay = perHour !== null
     ? '<span class="td-fire">' + perHour.toFixed(2) + '</span>'
@@ -1093,7 +1091,7 @@ function openModal(id) {
   STATE.currentStrategyId = id;
 
   var fp = STATE.firePrice;
-  var dropValue = (s.enriched_core_drops || []).reduce(function (sum, d) { return sum + ((d.price || 0) * (d.count || 1)); }, 0);
+  var dropValue = s.total_drop_fire || 0;
   var profit = dropValue - (s.total_cost_fire || 0);
   var roi = s.total_cost_fire > 0 ? ((dropValue / s.total_cost_fire - 1) * 100) : 0;
 

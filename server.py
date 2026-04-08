@@ -122,6 +122,7 @@ def enrich_strategy(strategy: dict, fire_price: float) -> dict:
         "enriched_core_drops": enriched_drops,
         "total_cost_fire": round(total_cost, 4),
         "total_cost_rmb": round(total_cost * fire_price / 10000, 2) if fire_price else 0,
+        "total_drop_fire": round(sum(item.get("price_fire", 0) * item["count"] for item in strategy.get("core_drops", [])), 4),
     }
 
 
@@ -382,24 +383,24 @@ def api_strategy_top():
     enriched = [enrich_strategy(s, fire_price) for s in strategies]
     # 计算 ROI
     def calc_roi(s):
-        drop_value = sum((d.get("price") or 0) for d in (s.get("enriched_core_drops") or []))
+        drop_fire = s.get("total_drop_fire") or 0
         cost = s.get("total_cost_fire") or 0
         if cost <= 0:
             return -9999
-        return (drop_value / cost - 1) * 100
+        return (drop_fire / cost - 1) * 100
     # 按 ROI 降序，取前 N
     ranked = sorted(enriched, key=calc_roi, reverse=True)[:n]
     result = []
     for s in ranked:
-        drop_value = sum((d.get("price") or 0) for d in (s.get("enriched_core_drops") or []))
+        drop_fire = s.get("total_drop_fire") or 0
         cost = s.get("total_cost_fire") or 0
         roi = calc_roi(s)
         result.append({
             "strategy": s,
             "roi": roi,
-            "drop_value": drop_value,
+            "drop_value": drop_fire,
             "cost": cost,
-            "profit": drop_value - cost if cost > 0 else 0,
+            "profit": drop_fire - cost if cost > 0 else 0,
         })
     return jsonify({"fire_price": fire_price, "recommendations": result})
 
