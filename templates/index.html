@@ -905,22 +905,18 @@ function loadRecommendations() {
       container.innerHTML = recs.map(function(item, i){
         var s = item.strategy;
         var roi = item.roi;
-        var profit = item.profit;
         var roiClass = roi >= 0 ? "roi" : "neg";
-        var profitClass = profit >= 0 ? "roi" : "neg";
         var roiSign = roi >= 0 ? "+" : "";
-        var profitSign = profit >= 0 ? "+" : "";
-        var rank = ["🥇","🥈","🥉"][i] || "";
-        // 计算每小时刷图次数
         var durMins = parseDurationToMinutes(s.avg_duration) || 1;
         var runsPerHour = (60 / durMins).toFixed(1);
-        var profit = item.profit;
-        var profitClass = profit >= 0 ? "roi" : "neg";
-        var profitSign = profit >= 0 ? "+" : "";
         var dropValue = item.drop_value || 0;
         var costVal = item.cost || 0;
         var dpsVal = s.dps || 0;
         var survVal = s.survival || 0;
+        var profit = item.profit;
+        var profitClass = profit >= 0 ? "roi" : "neg";
+        var profitSign = profit >= 0 ? "+" : "";
+        var rank = ["🥇","🥈","🥉"][i] || "";
         var tagsHtml = (s.tags || []).map(function(t){ return '<span class="tag">' + escHtml(t) + '</span>'; }).join('');
         var rankBadge = ['','🥇','🥈','🥉'][i+1] || ('<span style="font-size:16px;font-weight:900;color:rgba(245,158,11,0.2)">' + (i+1) + '</span>');
         var buildImgsHtml = (s.build_imgs && s.build_imgs.length > 0)
