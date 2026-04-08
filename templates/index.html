@@ -389,6 +389,35 @@ body {
   transform: scale(1.05);
 }
 
+/* ===== RECOMMEND CARDS (REDESIGNED) ===== */
+.rc-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rc-card:hover { border-color: rgba(99,179,237,0.5); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+.rc-hdr { display: flex; flex-direction: column; gap: 6px; }
+.rc-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.rc-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.rc-kpi { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.kpi-cell { flex: 1; padding: 8px 10px; text-align: center; border-right: 1px solid var(--border); }
+.kpi-cell:last-child { border-right: none; }
+.kpi-cell .kpi-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 3px; }
+.kpi-cell .kpi-val { font-size: 15px; font-weight: 800; }
+.kpi-cell.kpi-profit.positive .kpi-val { color: var(--green); }
+.kpi-cell.kpi-profit.neg .kpi-val { color: var(--danger); }
+.rc-foot { display: flex; flex-direction: column; gap: 6px; }
+.rc-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.rc-buildimgs { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.rc-buildthumb { width: 44px; height: 44px; border-radius: 6px; object-fit: cover; border: 1.5px solid rgba(99,179,237,0.35); cursor: pointer; transition: all 0.15s; }
+.rc-buildthumb:hover { border-color: rgba(99,179,237,0.8); transform: scale(1.05); }
+
 /* ===== FILTER BAR ===== */
 .filter-bar {
   max-width: 1400px;
@@ -997,28 +1026,26 @@ function loadRecommendations() {
               return '<img src="' + url + '" class="rc-buildthumb" onclick="event.stopPropagation();openImgPreview(this.src)" title="点击查看加点图' + (idx+1) + '" />';
             }).join('') + (s.build_imgs.length > 4 ? '<span style="font-size:10px;color:var(--muted);align-self:center">+' + (s.build_imgs.length-4) + '</span>' : '') + '</div>'
           : '';
+        var dpsHtml = dpsVal > 0 ? '<span style="color:var(--fire)">⚔ ' + dpsVal.toLocaleString() + '</span>' : '';
+        var survHtml = survVal > 0 ? '<span style="color:var(--fire)">🛡 ' + survVal.toLocaleString() + '</span>' : '';
+        var attrHtml = (dpsHtml || survHtml) ? '<div style="display:flex;gap:12px;font-size:12px;color:var(--muted);margin-bottom:6px">' + dpsHtml + survHtml + '</div>' : '';
         return '<div class="rc-card" onclick="openModal(' + s.id + ')">' +
-          '<div class="rc-rank">' + rankBadge + '</div>' +
-          '<div class="rc-top">' +
-            '<div class="rc-name">' + escHtml(s.name || "---") + '</div>' +
-            '<span class="map-badge ' + escHtml(s.map) + '" style="flex-shrink:0">' + escHtml(s.map || "--") + '</span>' +
+          '<div class="rc-hdr">' +
+            '<div class="rc-title">' + escHtml(s.name || "---") + '</div>' +
+            '<div class="rc-meta">' +
+              '<span class="map-badge ' + escHtml(s.map) + '">' + escHtml(s.map || "--") + '</span>' +
+              '<span class="diff-badge ' + escHtml(s.difficulty) + '">' + escHtml(s.difficulty || "--") + '</span>' +
+              '<span style="color:var(--muted);font-size:12px">⏱ ' + escHtml(s.avg_duration || "--") + '</span>' +
+            '</div>' +
           '</div>' +
-          '<div class="rc-divider"></div>' +
-          '<div class="rc-row">' +
-            '<div class="rc-stat2"><div class="l">成本合计</div><div class="v" style="color:var(--fire)">' + (costVal > 0 ? costVal.toFixed(2) + '🔥' : '--') + '</div></div>' +
-            '<div class="rc-stat2"><div class="l">掉落价值</div><div class="v" style="color:var(--fire)">' + (dropValue > 0 ? dropValue.toFixed(2) + '🔥' : '--') + '</div></div>' +
-            '<div class="rc-stat2"><div class="l">净收益/时</div><div class="v ' + profitClass + '">' + profitSign + (profit * (60/durMins)).toFixed(1) + '🔥</div></div>' +
+          '<div class="rc-kpi">' +
+            '<div class="kpi-cell kpi-fire"><div class="kpi-label">成本</div><div class="kpi-val" style="color:var(--fire)">' + (costVal > 0 ? costVal.toFixed(2) + '🔥' : '--') + '</div></div>' +
+            '<div class="kpi-cell kpi-fire"><div class="kpi-label">掉落</div><div class="kpi-val" style="color:var(--fire)">' + (dropValue > 0 ? dropValue.toFixed(2) + '🔥' : '--') + '</div></div>' +
+            '<div class="kpi-cell kpi-profit ' + profitClass + '"><div class="kpi-label">净收益/时</div><div class="kpi-val">' + profitSign + (profit * (60/durMins)).toFixed(1) + '🔥</div></div>' +
           '</div>' +
-          '<div class="rc-row">' +
-            '<div class="rc-stat2"><div class="l">DPS值</div><div class="v">' + (dpsVal > 0 ? dpsVal.toLocaleString() : '--') + '</div></div>' +
-            '<div class="rc-stat2"><div class="l">生存值</div><div class="v">' + (survVal > 0 ? survVal.toLocaleString() : '--') + '</div></div>' +
-            '<div class="rc-stat2"><div class="l">刷图/时</div><div class="v">' + runsPerHour + ' 次</div></div>' +
-          '</div>' +
-          buildImgsHtml +
-          '<div class="rc-tags">' + tagsHtml + '</div>' +
-          '<div style="margin-top:8px;display:flex;align-items:center;gap:8px">' +
-            '<span style="font-size:12px;color:var(--muted)">⏱ ' + escHtml(s.avg_duration || "--") + '</span>' +
-            '<span class="diff-badge ' + escHtml(s.difficulty) + '" style="font-size:11px;padding:1px 6px">' + escHtml(s.difficulty || "--") + '</span>' +
+          '<div class="rc-foot">' +
+            buildImgsHtml +
+            '<div class="rc-tags">' + tagsHtml + '</div>' +
           '</div>' +
         '</div>';
       }).join("");
