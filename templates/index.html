@@ -907,18 +907,39 @@ function loadRecommendations() {
         var roiSign = roi >= 0 ? "+" : "";
         var profitSign = profit >= 0 ? "+" : "";
         var rank = ["🥇","🥈","🥉"][i] || "";
-        return '<div class="recommend-card" onclick="openModal(' + s.id + ')">' +
-          '<div class="rc-rank">' + (i+1) + '</div>' +
-          '<div class="rc-name">' + rank + " " + escHtml(s.name || "---") + '</div>' +
-          '<div class="rc-map">' + escHtml(s.map || "--") + '</div>' +
-          '<div class="rc-stats">' +
-            '<div class="rc-stat"><div class="l">投入产出</div><div class="v ' + roiClass + '">' + roiSign + roi.toFixed(1) + '%</div></div>' +
-            '<div class="rc-stat"><div class="l">收益估算</div><div class="v ' + profitClass + '">' + profitSign + profit.toFixed(2) + '🔥</div></div>' +
-            '<div class="rc-stat"><div class="l">成本</div><div class="v" style="color:var(--fire)">' + (item.cost > 0 ? item.cost.toFixed(2) + '🔥' : "--") + '</div></div>' +
+        // 计算每小时刷图次数
+        var durMins = parseDurationToMinutes(s.avg_duration) || 1;
+        var runsPerHour = (60 / durMins).toFixed(1);
+        var profit = item.profit;
+        var profitClass = profit >= 0 ? "roi" : "neg";
+        var profitSign = profit >= 0 ? "+" : "";
+        var dropValue = item.drop_value || 0;
+        var costVal = item.cost || 0;
+        var dpsVal = s.dps || 0;
+        var survVal = s.survival || 0;
+        var tagsHtml = (s.tags || []).map(function(t){ return '<span class="tag">' + escHtml(t) + '</span>'; }).join('');
+        var rankBadge = ['','🥇','🥈','🥉'][i+1] || ('<span style="font-size:16px;font-weight:900;color:rgba(245,158,11,0.2)">' + (i+1) + '</span>');
+        return '<div class="rc-card" onclick="openModal(' + s.id + ')">' +
+          '<div class="rc-rank">' + rankBadge + '</div>' +
+          '<div class="rc-top">' +
+            '<div class="rc-name">' + escHtml(s.name || "---") + '</div>' +
+            '<span class="map-badge ' + escHtml(s.map) + '" style="flex-shrink:0">' + escHtml(s.map || "--") + '</span>' +
           '</div>' +
-          '<div class="rc-footer">' +
-            '<span class="rc-duration">⏱ ' + escHtml(s.avg_duration || "--") + '</span>' +
-            '<span class="diff-badge ' + escHtml(s.difficulty) + '">' + escHtml(s.difficulty || "--") + '</span>' +
+          '<div class="rc-divider"></div>' +
+          '<div class="rc-row">' +
+            '<div class="rc-stat2"><div class="l">成本合计</div><div class="v" style="color:var(--fire)">' + (costVal > 0 ? costVal.toFixed(2) + '🔥' : '--') + '</div></div>' +
+            '<div class="rc-stat2"><div class="l">掉落价值</div><div class="v" style="color:var(--fire)">' + (dropValue > 0 ? dropValue.toFixed(2) + '🔥' : '--') + '</div></div>' +
+            '<div class="rc-stat2"><div class="l">净收益/时</div><div class="v ' + profitClass + '">' + profitSign + (profit * (60/durMins)).toFixed(1) + '🔥</div></div>' +
+          '</div>' +
+          '<div class="rc-row">' +
+            '<div class="rc-stat2"><div class="l">DPS值</div><div class="v">' + (dpsVal > 0 ? dpsVal.toLocaleString() : '--') + '</div></div>' +
+            '<div class="rc-stat2"><div class="l">生存值</div><div class="v">' + (survVal > 0 ? survVal.toLocaleString() : '--') + '</div></div>' +
+            '<div class="rc-stat2"><div class="l">刷图/时</div><div class="v">' + runsPerHour + ' 次</div></div>' +
+          '</div>' +
+          '<div class="rc-tags">' + tagsHtml + '</div>' +
+          '<div style="margin-top:8px;display:flex;align-items:center;gap:8px">' +
+            '<span style="font-size:12px;color:var(--muted)">⏱ ' + escHtml(s.avg_duration || "--") + '</span>' +
+            '<span class="diff-badge ' + escHtml(s.difficulty) + '" style="font-size:11px;padding:1px 6px">' + escHtml(s.difficulty || "--") + '</span>' +
           '</div>' +
         '</div>';
       }).join("");
