@@ -1041,7 +1041,7 @@ function renderRow(s, fp) {
     ? '<span class="td-roi">' + (roi >= 0 ? "+" : "") + roi.toFixed(1) + '%</span>'
     : '<span style="color:var(--muted)">--</span>';
   var perHour = fp > 0 && s.total_cost_fire > 0 && s.avg_duration
-    ? (profit - (s.total_cost_fire || 0)) * (60 / parseDurationToMinutes(s.avg_duration))
+    ? dropValue * (60 / parseDurationToMinutes(s.avg_duration))
     : null;
   var perHourDisplay = perHour !== null
     ? '<span class="td-fire">' + perHour.toFixed(2) + '</span>'
