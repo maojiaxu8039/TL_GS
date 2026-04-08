@@ -656,6 +656,13 @@ body {
   <select class="filter-select" id="mapFilter">
     <option value="">全部地图</option>
   </select>
+  <select class="filter-select" id="difficultyFilter">
+    <option value="">全部难度</option>
+    <option value="简单">简单</option>
+    <option value="中等">中等</option>
+    <option value="困难">困难</option>
+    <option value="专家">专家</option>
+  </select>
   <select class="filter-select" id="tagFilter">
     <option value="">全部标签</option>
     <option value="众神">众神</option>
@@ -808,7 +815,7 @@ body {
 var STATE = {
   allStrategies: [],
   firePrice: 0,
-  filter: { keyword: "", map: "", tag: "" },
+  filter: { keyword: "", map: "", difficulty: "", tag: "" },
   sort: { field: "name", asc: true },
   currentStrategyId: null,
 };
@@ -826,6 +833,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setInterval(loadRecommendations, 5 * 60 * 1000);
   document.getElementById("searchInput").addEventListener("input", onFilter);
   document.getElementById("mapFilter").addEventListener("change", onFilter);
+  document.getElementById("difficultyFilter").addEventListener("change", onFilter);
   document.getElementById("tagFilter").addEventListener("change", onFilter);
   // 列头排序
   document.querySelectorAll("th[data-sort]").forEach(function (th) {
@@ -936,6 +944,7 @@ function loadStrategies() {
 function onFilter() {
   STATE.filter.keyword = document.getElementById("searchInput").value.trim().toLowerCase();
   STATE.filter.map = document.getElementById("mapFilter").value;
+  STATE.filter.difficulty = document.getElementById("difficultyFilter").value;
   STATE.filter.tag = document.getElementById("tagFilter").value;
   renderStrategies();
 }
@@ -946,8 +955,9 @@ function getFiltered() {
       s.name.toLowerCase().includes(STATE.filter.keyword) ||
       (s.map || "").toLowerCase().includes(STATE.filter.keyword);
     var matchMap = !STATE.filter.map || s.map === STATE.filter.map;
+    var matchDiff = !STATE.filter.difficulty || s.difficulty === STATE.filter.difficulty;
     var matchTag = !STATE.filter.tag || (s.tags && s.tags.includes(STATE.filter.tag));
-    return matchKw && matchMap && matchTag;
+    return matchKw && matchMap && matchDiff && matchTag;
   });
 }
 
