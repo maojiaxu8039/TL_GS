@@ -6,18 +6,18 @@
 <title>TL_GS - 玩法策略推荐</title>
 <style>
 :root {
-  --bg: #0b0e17;
-  --surface: #13172a;
-  --surface2: #1a2035;
-  --border: #252a40;
-  --fire: #f59e0b;
-  --gold: #fbbf24;
+  --bg: #0D0F1A;
+  --surface: #13172A;
+  --surface2: #171A2B;
+  --border: #252A41;
+  --fire: #FFAA33;
+  --gold: #FFCF4D;
   --rmb: #34d399;
   --danger: #f87171;
-  --text: #e2e8f0;
-  --muted: #64748b;
+  --text: #E5E7EB;
+  --muted: #7A8397;
   --blue: #60a5fa;
-  --green: #34d399;
+  --green: #00C08B;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -401,17 +401,30 @@ body {
   flex-direction: column;
   gap: 12px;
   min-height: 200px;
+  position: relative;
+  overflow: hidden;
 }
-.rc-card:hover { border-color: rgba(99,179,237,0.5); box-shadow: 0 6px 24px rgba(0,0,0,0.5); transform: translateY(-2px); }
+.rc-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, #F19C2B, #FF4D00);
+  border-radius: 16px 0 0 16px;
+  opacity: 0.8;
+}
+.rc-card:hover { border-color: rgba(241,156,43,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.6); transform: translateY(-2px); }
+.rc-card:hover::before { opacity: 1; }
 .rc-hdr { display: flex; flex-direction: column; gap: 8px; }
-.rc-title { font-size: 16px; font-weight: 800; color: var(--text); line-height: 1.4; }
+.rc-title { font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.4; }
 .rc-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .rc-kpi { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; flex: 1; }
 .kpi-cell { flex: 1; padding: 12px 14px; text-align: center; border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; gap: 4px; }
 .kpi-cell:last-child { border-right: none; }
 .kpi-cell .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
 .kpi-cell .kpi-val { font-size: 18px; font-weight: 900; letter-spacing: -0.5px; }
-.kpi-cell.kpi-profit.positive .kpi-val { color: #4ade80; }
+.kpi-cell.kpi-profit.positive .kpi-val { color: var(--green); }
 .kpi-cell.kpi-profit.neg .kpi-val { color: var(--danger); }
 .rc-foot { display: flex; flex-direction: column; gap: 8px; }
 .rc-tags { display: flex; gap: 5px; flex-wrap: wrap; }
