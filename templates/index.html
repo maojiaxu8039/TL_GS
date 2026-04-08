@@ -719,6 +719,8 @@ body {
               </select>
             </td>
           </tr>
+          <tr><td>DPS值</td><td><input class="pv-input" id="pv-dps" type="number" step="any" placeholder="--" /></td></tr>
+          <tr><td>生存值</td><td><input class="pv-input" id="pv-survival" type="number" step="any" placeholder="--" /></td></tr>
           <tr><td>标签</td><td><input class="pv-input" id="pv-tags" placeholder="多个标签用逗号分隔" /></td></tr>
           <tr><td>成本物品</td><td id="pv-cost">--</td></tr>
           <tr><td>核心掉落</td><td id="pv-drops">--</td></tr>
@@ -1086,6 +1088,8 @@ function openModal(id) {
       '<div class="modal-meta-item"><div class="label">地图区域</div><div class="value">📍 ' + escHtml(s.map) + '</div></div>' +
       '<div class="modal-meta-item"><div class="label">平均时长</div><div class="value">⏱ ' + escHtml(s.avg_duration) + '</div></div>' +
       '<div class="modal-meta-item"><div class="label">难度</div><div class="value"><span class="diff-badge ' + escHtml(s.difficulty) + '">' + escHtml(s.difficulty) + '</span></div></div>' +
+      '<div class="modal-meta-item"><div class="label">DPS值</div><div class="value" style="color:var(--fire)">' + ((s.dps || 0) > 0 ? s.dps : '--') + '</div></div>' +
+      '<div class="modal-meta-item"><div class="label">生存值</div><div class="value" style="color:var(--fire)">' + ((s.survival || 0) > 0 ? s.survival : '--') + '</div></div>' +
       '<div class="modal-meta-item"><div class="label">成本合计</div><div class="value" style="color:var(--fire)" id="mCostTotal">' + (s.total_cost_fire > 0 ? s.total_cost_fire.toFixed(2) + " 🔥" : "--") + '</div></div>' +
       '<div class="modal-meta-item"><div class="label">掉落价值</div><div class="value" style="color:var(--fire)" id="mDropValue">' + dropValue.toFixed(2) + ' 🔥</div></div>' +
       '<div class="modal-meta-item"><div class="label">收益估算</div><div class="value" style="color:' + (profit >= 0 ? "var(--green)" : "var(--danger)") + '">' + (profit >= 0 ? "+" : "") + profit.toFixed(2) + ' 🔥</div></div>' +
@@ -1323,7 +1327,7 @@ function openUploadModal() {
   document.getElementById("parseBtn").disabled = true;
   document.getElementById("addBtn").disabled = true;
   // 重置可编辑字段
-  ["pv-name","pv-map","pv-duration","pv-tags"].forEach(function(id) {
+  ["pv-name","pv-map","pv-duration","pv-tags","pv-dps","pv-survival"].forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.value = "";
   });
@@ -1331,6 +1335,10 @@ function openUploadModal() {
   if (diffEl) diffEl.value = "";
   document.getElementById("pv-cost").textContent = "--";
   document.getElementById("pv-drops").textContent = "--";
+  var dpsEl = document.getElementById("pv-dps");
+  if (dpsEl) dpsEl.value = "";
+  var survEl = document.getElementById("pv-survival");
+  if (survEl) survEl.value = "";
 }
 
 function closeUploadModal() {
@@ -1373,6 +1381,10 @@ function fillPreview(parsed) {
   document.getElementById("pv-name").value = parsed.name || "";
   document.getElementById("pv-map").value = parsed.map || "";
   document.getElementById("pv-duration").value = parsed.avg_duration || "";
+  var dpsEl = document.getElementById("pv-dps");
+  if (dpsEl) dpsEl.value = parsed.dps || "";
+  var survEl = document.getElementById("pv-survival");
+  if (survEl) survEl.value = parsed.survival || "";
   document.getElementById("pv-tags").value = (parsed.tags || []).join(", ") || "";
   // 难度 select
   var diffEl = document.getElementById("pv-difficulty");
@@ -1431,6 +1443,8 @@ function doUploadAndAdd() {
       cost_items: (_lastParsed && _lastParsed.cost_items) || [],
       core_drops: (_lastParsed && _lastParsed.core_drops) || [],
       use_count: (_lastParsed && _lastParsed.use_count) || 1,
+      dps: parseFloat(document.getElementById("pv-dps").value) || 0,
+      survival: parseFloat(document.getElementById("pv-survival").value) || 0,
     };
     submitStrategyPayload(payload);
     return;
@@ -1447,6 +1461,8 @@ function doUploadAndAdd() {
     cost_items: _lastParsed.cost_items || [],
     core_drops: _lastParsed.core_drops || [],
     use_count: _lastParsed.use_count || 1,
+    dps: parseFloat(document.getElementById("pv-dps").value) || _lastParsed.dps || 0,
+    survival: parseFloat(document.getElementById("pv-survival").value) || _lastParsed.survival || 0,
   };
   submitStrategyPayload(payload);
 }

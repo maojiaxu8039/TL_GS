@@ -461,6 +461,10 @@ def api_strategy_patch(strategy_id):
         strategies[idx]["cost_items"] = data["cost_items"]
     if "core_drops" in data:
         strategies[idx]["core_drops"] = data["core_drops"]
+    if "dps" in data:
+        strategies[idx]["dps"] = data["dps"]
+    if "survival" in data:
+        strategies[idx]["survival"] = data["survival"]
     save_strategies(strategies)
     fire_price = get_latest_fire_price()
     enriched = enrich_strategy(strategies[idx], fire_price)
@@ -514,6 +518,8 @@ def api_strategy_add():
         "tags": data.get("tags", []),
         "notes": data.get("notes", ""),
         "use_count": use_count,
+        "dps": data.get("dps") or 0,
+        "survival": data.get("survival") or 0,
     }
     strategies = load_strategies()
     strategies.append(new_strategy)
