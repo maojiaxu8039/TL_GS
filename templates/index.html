@@ -1183,6 +1183,19 @@ function renderRow(s, fp) {
     : '<span style="color:var(--muted)">--</span>';
 
 
+  // 解析时长字符串为分钟数（必须放在使用前）
+  function parseDurationToMinutes(dur) {
+    if (!dur) return 0;
+    var colonMatch = dur.match(/^(\d+):(\d+)(:(\d+))?$/);
+    if (colonMatch) {
+      var parts = dur.split(":").map(Number);
+      if (parts.length === 3) { return parts[0] * 60 + parts[1] + parts[2] / 60; }
+      else if (parts.length === 2) { return parts[0] + parts[1] / 60; }
+    }
+    var h = dur.match(/(\d+(?:\.\d+)?)\s*h|小时/), m = dur.match(/(\d+)\s*m|分/), sec = dur.match(/(\d+)\s*s|秒/);
+    return (parseFloat(h[1] || 0) * 60 + parseInt(m[1] || 0) + parseInt(sec[1] || 0) / 60) || 1;
+  }
+
   // 收益显示
   var profitClass = profit > 0 ? "positive" : profit < 0 ? "negative" : "zero";
   var profitDisplay = s.total_cost_fire > 0
@@ -1205,33 +1218,6 @@ function renderRow(s, fp) {
   var perHourDisplay = perHour !== null && !isNaN(perHour) && isFinite(perHour)
     ? '<span class="td-fire">' + perHour.toFixed(2) + '</span>'
     : '<span style="color:var(--muted)">--</span>';
-
-
-  // 解析时长字符串为分钟数
-  function parseDurationToMinutes(dur) {
-    if (!dur) return 0;
-    // 格式1: HH:MM:SS 或 HH:MM 或 MM:SS
-    var colonMatch = dur.match(/^(\d+):(\d+)(:(\d+))?$/);
-    if (colonMatch) {
-      var parts = dur.split(":").map(Number);
-      if (parts.length === 3) {
-        return parts[0] * 60 + parts[1] + parts[2] / 60; // HH:MM:SS
-      } else if (parts.length === 2) {
-        // MM:SS（最常见，如 02:19）
-        return parts[0] + parts[1] / 60;
-      }
-    }
-    // 格式2: 带 h/m/s/小时/分/秒 后缀
-    var hours = 0, mins = 0, secs = 0;
-    var h = dur.match(/(\d+(?:\.\d+)?)\s*h|小时/);
-    var m = dur.match(/(\d+)\s*m|分/);
-    var s = dur.match(/(\d+)\s*s|秒/);
-    if (h) hours = parseFloat(h[1]);
-    if (m) mins = parseInt(m[1]);
-    if (s) secs = parseInt(s[1]);
-    var totalMins = hours * 60 + mins + secs / 60;
-    return totalMins > 0 ? totalMins : 1; // 默认1分钟防除零
-  }
 
   // 核心掉落
   var dropsAll = (s.enriched_core_drops || []);
