@@ -634,6 +634,10 @@ body {
 .bi-thumb{position:relative;width:72px;height:72px;border-radius:6px;overflow:hidden;border:1.5px solid rgba(99,179,237,.3)}
 .bi-thumb img{width:100%;height:100%;object-fit:cover}
 .bi-thumb-remove{position:absolute;top:2px;right:2px;width:18px;height:18px;background:rgba(239,68,68,.9);border-radius:50%;color:#fff;font-size:11px;line-height:18px;text-align:center;cursor:pointer}
+.rc-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.rc-buildimgs{display:flex;gap:6px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.rc-buildthumb{width:44px;height:44px;border-radius:6px;object-fit:cover;border:1.5px solid rgba(99,179,237,.35);cursor:pointer;transition:all .15s}
+.rc-buildthumb:hover{border-color:rgba(99,179,237,.8);transform:scale(1.05)}
 </style>
 </head>
 <body>
@@ -919,6 +923,11 @@ function loadRecommendations() {
         var survVal = s.survival || 0;
         var tagsHtml = (s.tags || []).map(function(t){ return '<span class="tag">' + escHtml(t) + '</span>'; }).join('');
         var rankBadge = ['','🥇','🥈','🥉'][i+1] || ('<span style="font-size:16px;font-weight:900;color:rgba(245,158,11,0.2)">' + (i+1) + '</span>');
+        var buildImgsHtml = (s.build_imgs && s.build_imgs.length > 0)
+          ? '<div class="rc-buildimgs">' + s.build_imgs.slice(0,4).map(function(url,idx){
+              return '<img src="' + url + '" class="rc-buildthumb" onclick="event.stopPropagation();openImgPreview(\'"' + url + '\'"\')" title="点击查看加点图' + (idx+1) + '" />';
+            }).join('') + (s.build_imgs.length > 4 ? '<span style="font-size:10px;color:var(--muted);align-self:center">+' + (s.build_imgs.length-4) + '</span>' : '') + '</div>'
+          : '';
         return '<div class="rc-card" onclick="openModal(' + s.id + ')">' +
           '<div class="rc-rank">' + rankBadge + '</div>' +
           '<div class="rc-top">' +
@@ -936,6 +945,7 @@ function loadRecommendations() {
             '<div class="rc-stat2"><div class="l">生存值</div><div class="v">' + (survVal > 0 ? survVal.toLocaleString() : '--') + '</div></div>' +
             '<div class="rc-stat2"><div class="l">刷图/时</div><div class="v">' + runsPerHour + ' 次</div></div>' +
           '</div>' +
+          buildImgsHtml +
           '<div class="rc-tags">' + tagsHtml + '</div>' +
           '<div style="margin-top:8px;display:flex;align-items:center;gap:8px">' +
             '<span style="font-size:12px;color:var(--muted)">⏱ ' + escHtml(s.avg_duration || "--") + '</span>' +
