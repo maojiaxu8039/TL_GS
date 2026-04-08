@@ -624,6 +624,13 @@ body {
 .settings-btn:hover{border-color:var(--fire);color:var(--fire)}
 
 .choice-card:hover{opacity:.85;transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.build-img-zone{min-height:60px;border:1.5px dashed rgba(99,179,237,.4);border-radius:8px;padding:10px;cursor:pointer;transition:all .2s;background:rgba(99,179,237,.05)}
+.build-img-zone:hover{border-color:rgba(99,179,237,.8);background:rgba(99,179,237,.12)}
+.bi-zonetip{font-size:12px;color:var(--muted);text-align:center}
+.bi-previews{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.bi-thumb{position:relative;width:72px;height:72px;border-radius:6px;overflow:hidden;border:1.5px solid rgba(99,179,237,.3)}
+.bi-thumb img{width:100%;height:100%;object-fit:cover}
+.bi-thumb-remove{position:absolute;top:2px;right:2px;width:18px;height:18px;background:rgba(239,68,68,.9);border-radius:50%;color:#fff;font-size:11px;line-height:18px;text-align:center;cursor:pointer}
 </style>
 </head>
 <body>
@@ -745,6 +752,13 @@ body {
           <tr><td>标签</td><td><input class="pv-input" id="pv-tags" placeholder="多个标签用逗号分隔" /></td></tr>
           <tr><td>成本物品</td><td id="pv-cost">--</td></tr>
           <tr><td>核心掉落</td><td id="pv-drops">--</td></tr>
+          <tr><td>策略加点</td><td id="pv-buildimgs">
+            <div class="build-img-zone" id="buildImgZone" onclick="document.getElementById('buildImgInput').click()">
+              <input type="file" id="buildImgInput" multiple accept="image/*" style="display:none" onchange="onBuildImgsSelected(this)" />
+              <div class="bi-zonetip">点击上传加点截图（可多选）</div>
+              <div class="bi-previews" id="buildImgPreviews"></div>
+            </div>
+          </td></tr>
         </table>
         <div class="upload-status" id="uploadStatus"></div>
       </div>
@@ -1136,6 +1150,15 @@ function openModal(id) {
       '<table class="modal-item-table" id="modalDropTable"><thead><tr><th>物品</th><th>火价</th><th>数量</th><th>小计</th><th></th></tr></thead><tbody id="modalDropRows">' + dropRows + '</tbody></table></div>'
     ) : "") +
 
+    ((s.build_imgs && s.build_imgs.length > 0) ? (
+      '<div style="margin-top:12px"><div class="modal-section-title">🎯 策略加点</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px">' +
+      s.build_imgs.map(function(url) {
+        return '<img src="' + url + '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1.5px solid rgba(99,179,237,.3);cursor:pointer" onclick="window.open(this.src)" />';
+      }).join("") +
+      '</div></div>'
+    ) : "") +
+
     (s.notes ? '<div class="modal-notes">' + escHtml(s.notes) + '</div>' : "") +
 
     '<div style="font-size:11px;color:var(--muted);text-align:right;padding-top:4px">当前火价: ' + (fp > 0 ? fp.toFixed(2) + " 元/万火" : "--") + ' · 点击列头可排序</div>'
@@ -1367,6 +1390,8 @@ function openManualAddModal() {
   if (diffEl) diffEl.value = "";
   document.getElementById("pv-cost").textContent = "--";
   document.getElementById("pv-drops").textContent = "--";
+  window._buildImgs = [];
+  renderBuildImgPreviews();
 }
 
 function openUploadModal() {
@@ -1389,10 +1414,8 @@ function openUploadModal() {
   if (diffEl) diffEl.value = "";
   document.getElementById("pv-cost").textContent = "--";
   document.getElementById("pv-drops").textContent = "--";
-  var dpsEl = document.getElementById("pv-dps");
-  if (dpsEl) dpsEl.value = "";
-  var survEl = document.getElementById("pv-survival");
-  if (survEl) survEl.value = "";
+  window._buildImgs = [];
+  renderBuildImgPreviews();
 }
 
 function closeUploadModal() {
@@ -1400,6 +1423,46 @@ function closeUploadModal() {
   document.getElementById("uploadModalTitle").textContent = "📷 添加策略截图";
   document.getElementById("uploadZone").style.display = "block";
   document.getElementById("previewSection").classList.remove("show");
+}
+
+window._buildImgs = []; // 当前策略加点图
+
+function onBuildImgsSelected(input) {
+  var files = input.files;
+  if (!files.length) return;
+  var formData = new FormData();
+  for (var i = 0; i < files.length; i++) formData.append("images", files[i]);
+  setStatus("⏳ 正在上传加点图...", "loading");
+  fetch("/api/build-img/upload", { method: "POST", body: formData })
+    .then(function(r){ return r.json(); })
+    .then(function(ret){
+      if (ret.success) {
+        window._buildImgs = window._buildImgs.concat(ret.images);
+        renderBuildImgPreviews();
+        setStatus("加点图已上传 (" + window._buildImgs.length + "张)", "success");
+      } else {
+        setStatus("上传失败: " + ret.message, "error");
+      }
+    })
+    .catch(function(e){ setStatus("上传失败: " + e.message, "error"); });
+}
+
+function renderBuildImgPreviews() {
+  var container = document.getElementById("buildImgPreviews");
+  if (!container) return;
+  container.innerHTML = "";
+  window._buildImgs.forEach(function(url, i) {
+    var thumb = document.createElement("div");
+    thumb.className = "bi-thumb";
+    thumb.innerHTML = '<img src="' + url + '" />' +
+      '<div class="bi-thumb-remove" onclick="removeBuildImg(' + i + ')">✕</div>';
+    container.appendChild(thumb);
+  });
+}
+
+function removeBuildImg(index) {
+  window._buildImgs.splice(index, 1);
+  renderBuildImgPreviews();
 }
 
 function onFileSelected(input) {
@@ -1502,6 +1565,7 @@ function doUploadAndAdd() {
       use_count: (_lastParsed && _lastParsed.use_count) || 1,
       dps: parseFloat(document.getElementById("pv-dps").value) || 0,
       survival: parseFloat(document.getElementById("pv-survival").value) || 0,
+      build_imgs: window._buildImgs || [],
     };
     submitStrategyPayload(payload);
     return;
@@ -1520,6 +1584,7 @@ function doUploadAndAdd() {
     use_count: _lastParsed.use_count || 1,
     dps: parseFloat(document.getElementById("pv-dps").value) || _lastParsed.dps || 0,
     survival: parseFloat(document.getElementById("pv-survival").value) || _lastParsed.survival || 0,
+    build_imgs: window._buildImgs || _lastParsed.build_imgs || [],
   };
   submitStrategyPayload(payload);
 }

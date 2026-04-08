@@ -452,6 +452,8 @@ def api_strategy_patch(strategy_id):
         strategies[idx]["dps"] = data["dps"]
     if "survival" in data:
         strategies[idx]["survival"] = data["survival"]
+    if "build_imgs" in data:
+        strategies[idx]["build_imgs"] = data["build_imgs"]
     gs_db.update_strategy(strategy_id, strategies[idx])
     fire_price = get_latest_fire_price()
     enriched = enrich_strategy(strategies[idx], fire_price)
@@ -504,6 +506,7 @@ def api_strategy_add():
         "use_count": use_count,
         "dps": data.get("dps") or 0,
         "survival": data.get("survival") or 0,
+        "build_imgs": data.get("build_imgs") or [],
     }
     gs_db.add_strategy(new_strategy)
 
@@ -515,6 +518,23 @@ def api_strategy_add():
         "message": f"已添加策略: {enriched['name']}",
         "strategy": enriched,
     })
+
+@app.route("/api/build-img/upload", methods=["POST"])
+def api_build_img_upload():
+    """上传策略加点图片（支持多张）"""
+    files = request.files.getlist("images")
+    if not files or all(f.filename == "" for f in files):
+        return jsonify({"success": False, "message": "没有上传图片"}), 400
+    uploaded = []
+    for img in files:
+        if not img.filename:
+            continue
+        ext = os.path.splitext(img.filename)[1] or ".png"
+        filename = f"{uuid.uuid4().hex}{ext}"
+        filepath = UPLOAD_DIR / filename
+        img.save(str(filepath))
+        uploaded.append(f"/static/uploads/{filename}")
+    return jsonify({"success": True, "images": uploaded})
 
 @app.route("/api/strategy/upload", methods=["POST"])
 def api_strategy_upload():
@@ -558,6 +578,7 @@ def api_strategy_upload():
         "tags": parsed.get("tags", []),
         "notes": parsed.get("notes", ""),
         "use_count": use_count,
+        "build_imgs": [],
     }
 
     gs_db.add_strategy(new_strategy)

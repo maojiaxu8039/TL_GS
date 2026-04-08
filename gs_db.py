@@ -35,6 +35,7 @@ def init_db():
         use_count INTEGER DEFAULT 1,
         dps REAL DEFAULT 0,
         survival REAL DEFAULT 0,
+        build_imgs TEXT DEFAULT '[]',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
@@ -99,7 +100,7 @@ def _save_strategy_raw(conn, s: dict):
     if exists:
         cur.execute("""
         UPDATE strategies SET name=?, map=?, avg_duration=?, difficulty=?,
-        tags=?, notes=?, use_count=?, dps=?, survival=?
+        tags=?, notes=?, use_count=?, dps=?, survival=?, build_imgs=?
         WHERE id=?
         """, (
             s.get("name", ""),
@@ -111,12 +112,13 @@ def _save_strategy_raw(conn, s: dict):
             s.get("use_count", 1),
             s.get("dps", 0) or 0,
             s.get("survival", 0) or 0,
+            json.dumps(s.get("build_imgs") or [], ensure_ascii=False),
             strategy_id,
         ))
     else:
         cur.execute("""
-        INSERT INTO strategies (id, name, map, avg_duration, difficulty, tags, notes, use_count, dps, survival)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO strategies (id, name, map, avg_duration, difficulty, tags, notes, use_count, dps, survival, build_imgs)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             strategy_id,
             s.get("name", ""),
@@ -128,6 +130,7 @@ def _save_strategy_raw(conn, s: dict):
             s.get("use_count", 1),
             s.get("dps", 0) or 0,
             s.get("survival", 0) or 0,
+            json.dumps(s.get("build_imgs") or [], ensure_ascii=False),
         ))
 
     # 删除旧的关联数据
@@ -166,6 +169,7 @@ def load_strategies() -> list:
     for row in rows:
         s = dict(row)
         s["tags"] = json.loads(s["tags"]) if s["tags"] else []
+        s["build_imgs"] = json.loads(s["build_imgs"]) if s.get("build_imgs") else []
         strategy_id = s["id"]
 
         cur.execute("SELECT name, count FROM cost_items WHERE strategy_id = ?", (strategy_id,))
