@@ -623,6 +623,7 @@ body {
 .settings-btn{background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:8px 16px;font-size:14px;cursor:pointer;transition:all .2s;font-family:inherit}
 .settings-btn:hover{border-color:var(--fire);color:var(--fire)}
 
+.choice-card:hover{opacity:.85;transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
@@ -634,7 +635,7 @@ body {
     <span>火炬之光无限 · 玩法策略推荐</span>
   </div>
   <div class="header-actions">
-    <button class="add-btn" onclick="openUploadModal()">➕ 添加策略截图</button>
+    <button class="add-btn" onclick="openAddChoiceModal()">➕ 添加策略</button>
     <button class="settings-btn" onclick="openSettingsModal()">⚙️ 设置</button>
   </div>
 </div>
@@ -687,11 +688,31 @@ body {
   </table>
 </div>
 
+<!-- ADD CHOICE MODAL -->
+<div class="modal-overlay" id="addChoiceModal">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-title">➕ 添加策略</div>
+      <button class="modal-close" onclick="closeAddChoiceModal()">✕</button>
+    </div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:16px;padding:24px">
+      <div class="choice-card" onclick="openManualAddModal()" style="cursor:pointer;border:1.5px solid rgba(99,179,237,0.3);border-radius:12px;padding:20px 24px;background:rgba(99,179,237,0.08);transition:all 0.2s">
+        <div style="font-size:20px;margin-bottom:6px">📝 手动添加</div>
+        <div style="font-size:13px;color:var(--muted)">直接输入策略名称、地图、成本、掉落等信息</div>
+      </div>
+      <div class="choice-card" onclick="openUploadModal()" style="cursor:pointer;border:1.5px solid rgba(251,146,60,0.3);border-radius:12px;padding:20px 24px;background:rgba(251,146,60,0.08);transition:all 0.2s">
+        <div style="font-size:20px;margin-bottom:6px">🖼️ 添加截图</div>
+        <div style="font-size:13px;color:var(--muted)">上传游戏截图，AI 自动解析策略内容</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- UPLOAD MODAL -->
 <div class="modal-overlay" id="uploadModal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title">📷 添加策略截图</div>
+      <div class="modal-title" id="uploadModalTitle">📷 添加策略截图</div>
       <button class="modal-close" onclick="closeUploadModal()">✕</button>
     </div>
     <div class="modal-body" id="uploadModalBody">
@@ -1317,6 +1338,37 @@ function escHtml(str) {
 var _uploadFile = null;
 var _lastParsed = null; // 存储最近一次 OCR 解析结果
 
+function openAddChoiceModal() {
+  document.getElementById("addChoiceModal").classList.add("open");
+}
+
+function closeAddChoiceModal() {
+  document.getElementById("addChoiceModal").classList.remove("open");
+}
+
+function openManualAddModal() {
+  closeAddChoiceModal();
+  _uploadFile = null;
+  _lastParsed = null;
+  document.getElementById("uploadModal").classList.add("open");
+  document.getElementById("uploadModalTitle").textContent = "📝 手动添加策略";
+  document.getElementById("uploadZone").style.display = "none";
+  document.getElementById("previewSection").classList.add("show");
+  document.getElementById("fileInput").value = "";
+  document.getElementById("uploadStatus").className = "upload-status";
+  document.getElementById("uploadStatus").textContent = "";
+  document.getElementById("parseBtn").disabled = true;
+  document.getElementById("addBtn").disabled = false;
+  ["pv-name","pv-map","pv-duration","pv-tags","pv-dps","pv-survival"].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+  var diffEl = document.getElementById("pv-difficulty");
+  if (diffEl) diffEl.value = "";
+  document.getElementById("pv-cost").textContent = "--";
+  document.getElementById("pv-drops").textContent = "--";
+}
+
 function openUploadModal() {
   _uploadFile = null;
   _lastParsed = null;
@@ -1345,6 +1397,9 @@ function openUploadModal() {
 
 function closeUploadModal() {
   document.getElementById("uploadModal").classList.remove("open");
+  document.getElementById("uploadModalTitle").textContent = "📷 添加策略截图";
+  document.getElementById("uploadZone").style.display = "block";
+  document.getElementById("previewSection").classList.remove("show");
 }
 
 function onFileSelected(input) {
