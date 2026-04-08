@@ -653,8 +653,9 @@ body {
 <!-- FILTER BAR -->
 <div class="filter-bar">
   <input class="search-input" id="searchInput" placeholder="🔍 搜索玩法名称..." />
-  <input class="search-input" id="mapFilter" list="mapDatalist" placeholder="🔍 筛选地图区域..." style="min-width:160px" />
-  <datalist id="mapDatalist"></datalist>
+  <select class="filter-select" id="mapFilter">
+    <option value="">全部难度</option>
+  </select>
   <select class="filter-select" id="tagFilter">
     <option value="">全部标签</option>
     <option value="众神">众神</option>
@@ -824,7 +825,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // 每5分钟刷新一次推荐
   setInterval(loadRecommendations, 5 * 60 * 1000);
   document.getElementById("searchInput").addEventListener("input", onFilter);
-  document.getElementById("mapFilter").addEventListener("input", onFilter);
+  document.getElementById("mapFilter").addEventListener("change", onFilter);
   document.getElementById("tagFilter").addEventListener("change", onFilter);
   // 列头排序
   document.querySelectorAll("th[data-sort]").forEach(function (th) {
@@ -909,13 +910,18 @@ function loadStrategies() {
       STATE.firePrice = d.fire_price || 0;
       STATE.allStrategies = d.strategies || [];
 
-      // 动态填充地图筛选下拉
+      // 动态填充地图区域下拉
+      var sel = document.getElementById("mapFilter");
       var maps = {};
       STATE.allStrategies.forEach(function(s){ if(s.map) maps[s.map] = true; });
-      var datalist = document.getElementById("mapDatalist");
-      datalist.innerHTML = Object.keys(maps).sort().map(function(m){
-        return '<option value="' + escHtml(m) + '">' + escHtml(m) + '</option>';
-      }).join("");
+      var sortedMaps = Object.keys(maps).sort();
+      sel.options.length = 1; // keep "全部难度"
+      sortedMaps.forEach(function(m){
+        var opt = document.createElement("option");
+        opt.value = m;
+        opt.textContent = m;
+        sel.appendChild(opt);
+      });
 
       renderStrategies();
     })
@@ -929,7 +935,7 @@ function loadStrategies() {
 // ========== FILTER ==========
 function onFilter() {
   STATE.filter.keyword = document.getElementById("searchInput").value.trim().toLowerCase();
-  STATE.filter.map = document.getElementById("mapFilter").value.trim().toLowerCase();
+  STATE.filter.map = document.getElementById("mapFilter").value;
   STATE.filter.tag = document.getElementById("tagFilter").value;
   renderStrategies();
 }
@@ -939,7 +945,7 @@ function getFiltered() {
     var matchKw = !STATE.filter.keyword ||
       s.name.toLowerCase().includes(STATE.filter.keyword) ||
       (s.map || "").toLowerCase().includes(STATE.filter.keyword);
-    var matchMap = !STATE.filter.map || (s.map || "").toLowerCase().includes(STATE.filter.map);
+    var matchMap = !STATE.filter.map || s.map === STATE.filter.map;
     var matchTag = !STATE.filter.tag || (s.tags && s.tags.includes(STATE.filter.tag));
     return matchKw && matchMap && matchTag;
   });
