@@ -13,6 +13,7 @@ import time
 import threading
 from pathlib import Path
 from flask import Flask, jsonify, render_template, request, send_from_directory
+import gs_db
 
 BASE_DIR = Path(__file__).parent
 CONFIG_PATH = BASE_DIR / "config.yaml"
@@ -69,37 +70,23 @@ def get_latest_fire_price() -> float:
     return row[0] if row else 0
 
 
-# ========== 策略数据 ==========
-
-def load_strategies() -> list:
-    with open(STRATEGIES_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+# ========== 策略数据（由 gs_db.py 管理）============
 
 def refresh_all_prices_if_needed():
-    """检查是否需要刷新价格，是则重新从数据库查询所有物品价格并更新策略文件"""
+    """检查是否需要刷新价格，是则重新从数据库查询所有物品价格"""
     global _last_price_refresh
     now = time.time()
     if now - _last_price_refresh < _PRICE_REFRESH_INTERVAL:
         return
     _last_price_refresh = now
     try:
-        strategies = load_strategies()
+        strategies = gs_db.load_strategies()
         fire_price = get_latest_fire_price()
-        # 只重新enrich，不改变原始数据格式
         for s in strategies:
-            s["_fire_price"] = fire_price  # 标记刷新时间
+            s["_fire_price"] = fire_price
         print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] 价格缓存已刷新 ({len(strategies)} 条策略)")
     except Exception as e:
         print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] 价格刷新失败: {e}")
-
-
-def save_strategies(strategies: list):
-    with open(STRATEGIES_FILE, "w", encoding="utf-8") as f:
-        json.dump(strategies, f, ensure_ascii=False, indent=2)
-
-def get_next_id() -> int:
-    strategies = load_strategies()
-    return max((s.get("id", 0) for s in strategies), default=0) + 1
 
 def enrich_strategy(strategy: dict, fire_price: float) -> dict:
     total_cost = 0
@@ -382,7 +369,7 @@ def index():
 def api_strategies():
     refresh_all_prices_if_needed()
     fire_price = get_latest_fire_price()
-    strategies = load_strategies()
+    strategies = gs_db.load_strategies()
     return jsonify({"fire_price": fire_price, "strategies": [enrich_strategy(s, fire_price) for s in strategies]})
 
 @app.route("/api/strategy/top")
@@ -391,7 +378,7 @@ def api_strategy_top():
     refresh_all_prices_if_needed()
     n = request.args.get("n", 3, type=int)
     fire_price = get_latest_fire_price()
-    strategies = load_strategies()
+    strategies = gs_db.load_strategies()
     enriched = [enrich_strategy(s, fire_price) for s in strategies]
     # 计算 ROI
     def calc_roi(s):
@@ -448,7 +435,7 @@ def api_strategy_patch(strategy_id):
     data = request.get_json()
     if not data:
         return jsonify({"success": False, "message": "无效 JSON"}), 400
-    strategies = load_strategies()
+    strategies = gs_db.load_strategies()
     idx = None
     for i, s in enumerate(strategies):
         if s.get("id") == strategy_id:
@@ -456,7 +443,7 @@ def api_strategy_patch(strategy_id):
             break
     if idx is None:
         return jsonify({"success": False, "message": f"未找到 ID={strategy_id} 的策略"}), 404
-    # 更新成本物品和核心掉落（整体替换，支持增删改）
+    # 更新字段
     if "cost_items" in data:
         strategies[idx]["cost_items"] = data["cost_items"]
     if "core_drops" in data:
@@ -465,19 +452,14 @@ def api_strategy_patch(strategy_id):
         strategies[idx]["dps"] = data["dps"]
     if "survival" in data:
         strategies[idx]["survival"] = data["survival"]
-    save_strategies(strategies)
+    gs_db.update_strategy(strategy_id, strategies[idx])
     fire_price = get_latest_fire_price()
     enriched = enrich_strategy(strategies[idx], fire_price)
     return jsonify({"success": True, "strategy": enriched})
 
 @app.route("/api/strategy/<int:strategy_id>", methods=["DELETE"])
 def api_strategy_delete(strategy_id):
-    strategies = load_strategies()
-    before = len(strategies)
-    strategies = [s for s in strategies if s.get("id") != strategy_id]
-    if len(strategies) == before:
-        return jsonify({"success": False, "message": f"未找到 ID={strategy_id} 的策略"}), 404
-    save_strategies(strategies)
+    gs_db.delete_strategy(strategy_id)
     return jsonify({"success": True, "message": f"已删除 ID={strategy_id}"})
 
 @app.route("/api/strategy/add", methods=["POST"])
@@ -506,7 +488,9 @@ def api_strategy_add():
             "price_fire": item.get("price_fire", 0),
         })
 
-    strategy_id = get_next_id()
+    conn_for_id = gs_db.get_conn()
+    strategy_id = gs_db.get_next_id(conn_for_id)
+    conn_for_id.close()
     new_strategy = {
         "id": strategy_id,
         "name": data.get("name", "") or f"玩法{strategy_id}",
@@ -521,9 +505,7 @@ def api_strategy_add():
         "dps": data.get("dps") or 0,
         "survival": data.get("survival") or 0,
     }
-    strategies = load_strategies()
-    strategies.append(new_strategy)
-    save_strategies(strategies)
+    gs_db.add_strategy(new_strategy)
 
     fire_price = get_latest_fire_price()
     enriched = enrich_strategy(new_strategy, fire_price)
@@ -562,7 +544,9 @@ def api_strategy_upload():
         raw = item.get("count", 1)
         core_drops.append({"name": item["name"], "rarity": item.get("rarity", "普通"), "count": round(raw / use_count, 2) if use_count > 1 else raw, "price_fire": item.get("price_fire", 0)})
 
-    strategy_id = get_next_id()
+    conn_for_id = gs_db.get_conn()
+    strategy_id = gs_db.get_next_id(conn_for_id)
+    conn_for_id.close()
     new_strategy = {
         "id": strategy_id,
         "name": parsed.get("name", "") or f"玩法{strategy_id}",
@@ -576,9 +560,7 @@ def api_strategy_upload():
         "use_count": use_count,
     }
 
-    strategies = load_strategies()
-    strategies.append(new_strategy)
-    save_strategies(strategies)
+    gs_db.add_strategy(new_strategy)
 
     fire_price = get_latest_fire_price()
     enriched = enrich_strategy(new_strategy, fire_price)
