@@ -196,12 +196,20 @@ def parse_screenshot_ocr(image_path: str) -> dict:
     m = re.search(r'使用次数\s*[:：]?\s*(\d+)', full_text)
     parsed["use_count"] = int(m.group(1)) if m else 1
 
-    # 尝试从 "未知玩法" 或标题提取玩法名
-    m = re.search(r'地图玩法\s*[:：]?\s*([^\n]+)', full_text)
+    # 尝试从 "主天赋" 提取玩法名（优先级最高）
+    m = re.search(r'主天赋\s*\n?\s*([^\n]+)', full_text)
     if m:
         val = m.group(1).strip()
         if val and val not in ("未知玩法", ""):
             parsed["name"] = val
+
+    # 尝试从 "地图玩法" 提取玩法名（次优先）
+    if not parsed["name"]:
+        m = re.search(r'地图玩法\s*[:：]?\s*([^\n]+)', full_text)
+        if m:
+            val = m.group(1).strip()
+            if val and val not in ("未知玩法", ""):
+                parsed["name"] = val
 
     # ---- 成本物品解析 ----
     # 成本物品表中每行格式: 物品名 单价 数量 总价
