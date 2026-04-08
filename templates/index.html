@@ -1039,8 +1039,8 @@ function loadRecommendations() {
               return '<img src="' + url + '" class="rc-buildthumb" onclick="event.stopPropagation();openImgPreview(this.src)" title="点击查看加点图" />';
             }).join('') + (s.build_imgs.length > 4 ? '<span style="font-size:10px;color:var(--muted);align-self:center">+' + (s.build_imgs.length-4) + '</span>' : '') + '</div>'
           : '';
-        var dpsHtml = dpsVal > 0 ? '<span style="color:var(--fire)">⚔ ' + dpsVal.toLocaleString() + '</span>' : '';
-        var survHtml = survVal > 0 ? '<span style="color:var(--fire)">🛡 ' + survVal.toLocaleString() + '</span>' : '';
+        var dpsHtml = dpsVal > 0 ? '<span style="color:#41D3A5">DPS值 ' + dpsVal.toLocaleString() + '</span>' : '';
+        var survHtml = survVal > 0 ? '<span style="color:#41D3A5">生存值 ' + survVal.toLocaleString() + '</span>' : '';
         var attrHtml = (dpsHtml || survHtml) ? '<div style="display:flex;gap:16px;font-size:13px;color:var(--muted);margin-bottom:4px">' + dpsHtml + survHtml + '</div>' : '';
         return '<div class="rc-card" onclick="openModal(' + s.id + ')">' +
           '<div class="rc-hdr">' +
