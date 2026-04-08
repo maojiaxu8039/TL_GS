@@ -951,7 +951,7 @@ function loadRecommendations() {
       }).join("");
     })
     .catch(function(){
-      container.innerHTML = '<div class="recommend-loading">推荐加载失败</div>';
+      container.innerHTML = '<div class="recommend-loading">推荐加载失败: ' + (e && e.message ? e.message : '未知错误') + '</div>';
     });
 }
 
