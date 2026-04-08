@@ -499,6 +499,9 @@ body {
 .td-profit.positive { color: var(--green); }
 .td-profit.negative { color: var(--danger); }
 .td-profit.zero { color: var(--muted); }
+.td-match { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+.td-match.full { background: rgba(52,211,153,.15); color: #34d399; border: 1px solid rgba(52,211,153,.3); }
+.td-match.partial { background: rgba(251,146,60,.15); color: #fb923c; border: 1px solid rgba(251,146,60,.3); }
 .td-roi { font-size: 12px; color: var(--muted); white-space: nowrap; }
 
 /* ===== MODAL ===== */
@@ -687,6 +690,7 @@ body {
         <th data-sort="profit">收益估算🔥 <span class="sort-icon">▲</span></th>
         <th>净收益/每小时</th>
         <th data-sort="roi">投入产出比 <span class="sort-icon">▲</span></th>
+        <th>匹配</th>
       </tr>
     </thead>
     <tbody id="tableBody">
@@ -1043,6 +1047,14 @@ function renderRow(s, fp) {
   var profitDisplay = fp > 0 && s.total_cost_fire > 0
     ? '<span class="td-fire">' + profit.toFixed(2) + '</span>'
     : '<span style="color:var(--muted)">--</span>';
+  // 匹配状态
+  var allCostMatched = (s.enriched_cost_items || []).every(function(i){ return i.price !== null && i.price !== undefined && i.price > 0; });
+  var allDropMatched = (s.enriched_core_drops || []).every(function(i){ return i.price !== null && i.price !== undefined && i.price > 0; });
+  var matchFull = allCostMatched && allDropMatched;
+  var matchBadge = matchFull
+    ? '<span class="td-match full">完全匹配</span>'
+    : '<span class="td-match partial">未完全匹配</span>';
+
   var roiDisplay = roi !== 0 && fp > 0
     ? '<span class="td-roi">' + (roi >= 0 ? "+" : "") + roi.toFixed(1) + '%</span>'
     : '<span style="color:var(--muted)">--</span>';
@@ -1101,6 +1113,7 @@ function renderRow(s, fp) {
     '<td>' + profitDisplay + '</td>' +
     '<td>' + perHourDisplay + '</td>' +
     '<td>' + roiDisplay + '</td>' +
+    '<td>' + matchBadge + '</td> +
   '</tr>';
 }
 
