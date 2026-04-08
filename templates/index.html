@@ -268,14 +268,17 @@ body {
   max-width: 1400px;
   margin: 0 auto 16px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 12px 20px;
+  padding: 10px 20px;
+  flex-wrap: wrap;
 }
 .search-wrap {
+  flex: 1;
   display: flex;
   gap: 8px;
   background: var(--surface2);
@@ -283,6 +286,7 @@ body {
   border-radius: 10px;
   padding: 7px 14px;
   transition: border-color 0.2s;
+  min-width: 200px;
 }
 .search-wrap:focus-within { border-color: var(--fire); }
 .search-input {
@@ -622,10 +626,7 @@ body {
 
 <!-- FILTER BAR -->
 <div class="filter-bar">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input class="search-input" id="searchInput" placeholder="搜索玩法名称..." />
-  </div>
+  <input class="search-input" id="searchInput" placeholder="🔍 搜索玩法名称..." />
   <select class="filter-select" id="mapFilter">
     <option value="">全部地图</option>
   </select>
