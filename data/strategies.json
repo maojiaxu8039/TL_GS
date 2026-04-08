@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "深空",
+    "map": "深空",
+    "cost_items": [
+      {
+        "count": 1,
+        "name": "深空回响"
+      },
+      {
+        "count": 1,
+        "name": "罪孽之劫掠罗盘"
+      },
+      {
+        "count": 1,
+        "name": "富饶之劲敌罗盘"
+      },
+      {
+        "count": 1,
+        "name": "黄金之囚笼星盘"
+      },
+      {
+        "count": 1,
+        "name": "钛金手术刀"
+      },
+      {
+        "count": 1,
+        "name": "繁荣之深空探针"
+      },
+      {
+        "count": 1,
+        "name": "深空信标"
+      }
+    ],
+    "core_drops": [
+      {
+        "name": "初火源质",
+        "rarity": "普通",
+        "count": 179.3,
+        "price_fire": 1
+      },
+      {
+        "name": "神圣化石",
+        "rarity": "传奇",
+        "count": 5.48,
+        "price_fire": 26.3
+      },
+      {
+        "name": "悬赏之通缉罗盘",
+        "rarity": "普通",
+        "count": 1.32,
+        "price_fire": 36.8
+      },
+      {
+        "name": "传奇降生之绿芽",
+        "rarity": "传奇",
+        "count": 0.17,
+        "price_fire": 150
+      },
+      {
+        "name": "警戒之通缉罗盘",
+        "rarity": "普通",
+        "count": 0.63,
+        "price_fire": 40.5
+      },
+      {
+        "name": "罪孽之劫掠罗盘（遗珍）",
+        "rarity": "遗珍",
+        "count": 0.79,
+        "price_fire": 25.4
+      },
+      {
+        "name": "典藏之玩偶星盘（遗珍)",
+        "rarity": "遗珍",
+        "count": 0.37,
+        "price_fire": 51.6
+      },
+      {
+        "name": "罪孽之劫掠罗盘",
+        "rarity": "普通",
+        "count": 1.82,
+        "price_fire": 8.3
+      }
+    ],
+    "avg_duration": "02:19",
+    "difficulty": "",
+    "tags": [],
+    "notes": "",
+    "use_count": 110
+  }
+]
