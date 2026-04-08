@@ -925,7 +925,7 @@ function loadRecommendations() {
         var rankBadge = ['','🥇','🥈','🥉'][i+1] || ('<span style="font-size:16px;font-weight:900;color:rgba(245,158,11,0.2)">' + (i+1) + '</span>');
         var buildImgsHtml = (s.build_imgs && s.build_imgs.length > 0)
           ? '<div class="rc-buildimgs">' + s.build_imgs.slice(0,4).map(function(url,idx){
-              return '<img src="' + url + '" class="rc-buildthumb" onclick="event.stopPropagation();openImgPreview(\'"' + url + '\'"\')" title="点击查看加点图' + (idx+1) + '" />';
+              return '<img src="' + url + '" class="rc-buildthumb" onclick="event.stopPropagation();openImgPreview(this.src)" title="点击查看加点图' + (idx+1) + '" />';
             }).join('') + (s.build_imgs.length > 4 ? '<span style="font-size:10px;color:var(--muted);align-self:center">+' + (s.build_imgs.length-4) + '</span>' : '') + '</div>'
           : '';
         return '<div class="rc-card" onclick="openModal(' + s.id + ')">' +
