@@ -88,5 +88,261 @@
     "tags": [],
     "notes": "",
     "use_count": 110
+  },
+  {
+    "id": 3,
+    "name": "罗盘×46、囚笼×36等4个",
+    "map": "深空",
+    "cost_items": [
+      {
+        "name": "深空回响",
+        "count": 1
+      },
+      {
+        "name": "罪孽之劫掠罗盘",
+        "count": 1
+      },
+      {
+        "name": "富饶之劲敌罗盘",
+        "count": 1
+      },
+      {
+        "name": "黄金之囚笼罗盘",
+        "count": 1
+      },
+      {
+        "name": "繁荣之深空探针",
+        "count": 1
+      },
+      {
+        "name": "深空信标",
+        "count": 1
+      }
+    ],
+    "core_drops": [
+      {
+        "name": "初火源质",
+        "count": 165
+      },
+      {
+        "name": "神圣化石",
+        "count": 4
+      },
+      {
+        "name": "悬赏之通缉罗盘",
+        "count": 1
+      },
+      {
+        "name": "传奇降生之绿芽",
+        "count": 0
+      },
+      {
+        "name": "警戒之通缉罗盘",
+        "count": 0
+      },
+      {
+        "name": "命定之塔罗罗盘",
+        "count": 1
+      },
+      {
+        "name": "收容之叠界罗盘",
+        "count": 0
+      },
+      {
+        "name": "罪孽之劫掠罗盘（遗珍）",
+        "count": 0
+      }
+    ],
+    "avg_duration": "02:24",
+    "difficulty": "",
+    "tags": [
+      "多多"
+    ],
+    "notes": "",
+    "use_count": 41
+  },
+  {
+    "id": 4,
+    "name": "罗盘×46、囚笼×36等4个",
+    "map": "深空",
+    "cost_items": [
+      {
+        "count": 1,
+        "name": "深空回响"
+      },
+      {
+        "count": 1,
+        "name": "罪孽之劫掠罗盘"
+      },
+      {
+        "count": 1,
+        "name": "富饶之劲敌罗盘"
+      },
+      {
+        "count": 1,
+        "name": "黄金之囚笼星盘"
+      },
+      {
+        "count": 1,
+        "name": "钛金手术刀"
+      },
+      {
+        "count": 1,
+        "name": "繁荣之深空探针"
+      },
+      {
+        "count": 1,
+        "name": "深空信标"
+      }
+    ],
+    "core_drops": [
+      {
+        "name": "初火源质",
+        "rarity": "普通",
+        "count": 165.39,
+        "price_fire": 1
+      },
+      {
+        "name": "神圣化石",
+        "rarity": "传奇",
+        "count": 4.51,
+        "price_fire": 26.3
+      },
+      {
+        "name": "悬赏之通缉罗盘",
+        "rarity": "普通",
+        "count": 1.71,
+        "price_fire": 36.8
+      },
+      {
+        "name": "传奇降生之绿芽",
+        "rarity": "传奇",
+        "count": 0.22,
+        "price_fire": 150
+      },
+      {
+        "name": "警戒之通缉罗盘",
+        "rarity": "普通",
+        "count": 0.78,
+        "price_fire": 40.5
+      },
+      {
+        "name": "命定之塔罗罗盘",
+        "rarity": "普通",
+        "count": 1.41,
+        "price_fire": 21
+      },
+      {
+        "name": "收容之叠界罗盘",
+        "rarity": "普通",
+        "count": 0.27,
+        "price_fire": 95.4
+      },
+      {
+        "name": "罪孽之劫掠罗盘（遗珍)）",
+        "rarity": "遗珍",
+        "count": 0.98,
+        "price_fire": 25.4
+      }
+    ],
+    "avg_duration": "02:24",
+    "difficulty": "K7-1",
+    "tags": [],
+    "notes": "",
+    "use_count": 41
+  },
+  {
+    "id": 5,
+    "name": "囚笼×36、罗盘×31等3个",
+    "map": "深空",
+    "cost_items": [
+      {
+        "count": 1,
+        "name": "深空回响"
+      },
+      {
+        "count": 1,
+        "name": "罪孽之劫掠罗盘"
+      },
+      {
+        "count": 1,
+        "name": "富饶之劲敌罗盘"
+      },
+      {
+        "count": 1,
+        "name": "黄金之囚笼星盘"
+      },
+      {
+        "count": 1,
+        "name": "钛金手术刀"
+      },
+      {
+        "count": 1,
+        "name": "繁荣之深空探针"
+      },
+      {
+        "count": 1,
+        "name": "深空信标"
+      }
+    ],
+    "core_drops": [
+      {
+        "name": "初火源质",
+        "rarity": "普通",
+        "count": 179.3,
+        "price_fire": 1
+      },
+      {
+        "name": "神圣化石",
+        "rarity": "传奇",
+        "count": 5.48,
+        "price_fire": 26.3
+      },
+      {
+        "name": "悬赏之通缉罗盘",
+        "rarity": "普通",
+        "count": 1.32,
+        "price_fire": 36.8
+      },
+      {
+        "name": "传奇降生之绿芽",
+        "rarity": "传奇",
+        "count": 0.17,
+        "price_fire": 150
+      },
+      {
+        "name": "警戒之通缉罗盘",
+        "rarity": "普通",
+        "count": 0.63,
+        "price_fire": 40.5
+      },
+      {
+        "name": "罪孽之劫掠罗盘（遗珍）",
+        "rarity": "遗珍",
+        "count": 0.79,
+        "price_fire": 25.4
+      },
+      {
+        "name": "典藏之玩偶星盘（遗珍)",
+        "rarity": "遗珍",
+        "count": 0.37,
+        "price_fire": 51.6
+      },
+      {
+        "name": "罪孽之劫掠罗盘",
+        "rarity": "普通",
+        "count": 1.82,
+        "price_fire": 8.3
+      }
+    ],
+    "avg_duration": "02:19",
+    "difficulty": "简单",
+    "tags": [
+      "多多"
+    ],
+    "notes": "",
+    "use_count": 110,
+    "dps": 15000,
+    "survival": 300000
   }
 ]
