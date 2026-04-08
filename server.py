@@ -122,7 +122,7 @@ def enrich_strategy(strategy: dict, fire_price: float) -> dict:
         "enriched_core_drops": enriched_drops,
         "total_cost_fire": round(total_cost, 4),
         "total_cost_rmb": round(total_cost * fire_price / 10000, 2) if fire_price else 0,
-        "total_drop_fire": round(sum(item.get("price_fire", 0) * item["count"] for item in strategy.get("core_drops", [])), 4),
+        "total_drop_fire": round(sum((d.get("price") or 0) * (d["count"] or 0) for d in enriched_drops), 4),
     }
 
 
