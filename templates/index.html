@@ -316,6 +316,79 @@ body {
   border-radius: 14px;
 }
 
+.rc-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.rc-card:hover {
+  border-color: rgba(99,179,237,0.5);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.rc-rank {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(99,179,237,0.15);
+}
+.rc-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.rc-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rc-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 8px 0;
+}
+.rc-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.rc-stat2 {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+.rc-stat2 .l {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.rc-stat2 .v {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+  transform: scale(1.05);
+}
+
 /* ===== FILTER BAR ===== */
 .filter-bar {
   max-width: 1400px;
