@@ -658,33 +658,9 @@ body {
   </select>
   <select class="filter-select" id="difficultyFilter">
     <option value="">全部难度</option>
-    <option value="简单">简单</option>
-    <option value="中等">中等</option>
-    <option value="困难">困难</option>
-    <option value="专家">专家</option>
   </select>
   <select class="filter-select" id="tagFilter">
     <option value="">全部标签</option>
-    <option value="众神">众神</option>
-    <option value="劫车">劫车</option>
-    <option value="叠界">叠界</option>
-    <option value="塔罗">塔罗</option>
-    <option value="多多">多多</option>
-    <option value="大亨">大亨</option>
-    <option value="巨力">巨力</option>
-    <option value="无宠">无宠</option>
-    <option value="机械">机械</option>
-    <option value="梦魇">梦魇</option>
-    <option value="渴瘾">渴瘾</option>
-    <option value="狩猎">狩猎</option>
-    <option value="玩偶">玩偶</option>
-    <option value="画画">画画</option>
-    <option value="空空">空空</option>
-    <option value="迷城">迷城</option>
-    <option value="雾都">雾都</option>
-    <option value="魔方">魔方</option>
-    <option value="黑帆">黑帆</option>
-    <option value="黑潮">黑潮</option>
   </select>
 </div>
 
@@ -923,12 +899,32 @@ function loadStrategies() {
       var maps = {};
       STATE.allStrategies.forEach(function(s){ if(s.map) maps[s.map] = true; });
       var sortedMaps = Object.keys(maps).sort();
-      sel.options.length = 1; // keep "全部难度"
+      sel.options.length = 1;
       sortedMaps.forEach(function(m){
         var opt = document.createElement("option");
         opt.value = m;
         opt.textContent = m;
         sel.appendChild(opt);
+      });
+
+      var selDiff = document.getElementById("difficultyFilter");
+      var diffs = {};
+      STATE.allStrategies.forEach(function(s){ if(s.difficulty) diffs[s.difficulty] = true; });
+      Object.keys(diffs).sort().forEach(function(d){
+        var opt = document.createElement("option");
+        opt.value = d;
+        opt.textContent = d;
+        selDiff.appendChild(opt);
+      });
+
+      var selTag = document.getElementById("tagFilter");
+      var tags = {};
+      STATE.allStrategies.forEach(function(s){ (s.tags || []).forEach(function(t){ tags[t] = true; }); });
+      Object.keys(tags).sort().forEach(function(t){
+        var opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        selTag.appendChild(opt);
       });
 
       renderStrategies();
