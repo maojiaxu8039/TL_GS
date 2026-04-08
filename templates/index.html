@@ -1198,7 +1198,7 @@ function renderRow(s, fp) {
 
   // 收益显示
   var profitClass = profit > 0 ? "positive" : profit < 0 ? "negative" : "zero";
-  var profitDisplay = s.total_cost_fire > 0
+  var profitDisplay = dropValue > 0
     ? '<span class="td-fire">' + profit.toFixed(2) + '</span>'
     : '<span style="color:var(--muted)">--</span>';
   // 匹配状态
@@ -1212,7 +1212,7 @@ function renderRow(s, fp) {
   var roiDisplay = roi !== 0 && fp > 0
     ? '<span class="td-roi">' + (roi >= 0 ? "+" : "") + roi.toFixed(1) + '%</span>'
     : '<span style="color:var(--muted)">--</span>';
-  var perHour = s.total_cost_fire > 0 && s.avg_duration
+  var perHour = dropValue > 0 && s.avg_duration
     ? profit * (60 / parseDurationToMinutes(s.avg_duration))
     : null;
   var perHourDisplay = perHour !== null && !isNaN(perHour) && isFinite(perHour)
