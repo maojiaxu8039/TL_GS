@@ -904,6 +904,7 @@ function loadStrategies() {
       });
 
       var selDiff = document.getElementById("difficultyFilter");
+      selDiff.options.length = 1; // keep "全部难度"
       var diffs = {};
       STATE.allStrategies.forEach(function(s){ if(s.difficulty) diffs[s.difficulty] = true; });
       Object.keys(diffs).sort().forEach(function(d){
@@ -914,6 +915,7 @@ function loadStrategies() {
       });
 
       var selTag = document.getElementById("tagFilter");
+      selTag.options.length = 1; // keep "全部标签"
       var tags = {};
       STATE.allStrategies.forEach(function(s){ (s.tags || []).forEach(function(t){ tags[t] = true; }); });
       Object.keys(tags).sort().forEach(function(t){
