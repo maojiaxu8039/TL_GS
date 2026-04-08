@@ -1114,7 +1114,7 @@ function renderRow(s, fp) {
     '<td>' + perHourDisplay + '</td>' +
     '<td>' + roiDisplay + '</td>' +
     '<td>' + matchBadge + '</td>' +
-  '</tr>';
+    '</tr>';
 }
 
 // ========== MODAL ==========
@@ -1135,7 +1135,7 @@ function openModal(id) {
       '<td><input type="number" class="cnt-input cost-cnt-input" data-type="cost" data-idx="' + idx + '" data-price="' + (item.price || 0) + '" value="' + item.count + '" min="0" oninput="recalcModalTotals()" style="width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:3px 6px;font-size:12px;text-align:center" /></td>' +
       '<td style="color:var(--fire)" class="cost-total">' + (item.total_cost > 0 ? item.total_cost.toFixed(2) : "--") + '</td>' +
       '<td><button onclick="delModalRow(this)" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:14px" title="删除">✕</button></td>' +
-    '</tr>';
+      '</tr>';
   }).join("");
   costRows += '<tr><td colspan="5" style="padding:4px;text-align:left"><button onclick="addCostRow()" style="background:var(--surface2);border:1px dashed var(--border);border-radius:6px;color:var(--muted);cursor:pointer;padding:4px 12px;font-size:12px">+ 添加成本物品</button></td></tr>';
 
@@ -1146,7 +1146,7 @@ function openModal(id) {
       '<td><input type="number" class="cnt-input drop-cnt-input" data-type="drop" data-idx="' + idx + '" value="' + item.count + '" min="0" data-price="' + (item.price || 0) + '" oninput="recalcModalTotals()" style="width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:3px 6px;font-size:12px;text-align:center" /></td>' +
       '<td style="color:var(--fire)" class="drop-total">' + ((item.price || 0) * item.count).toFixed(2) + '</td>' +
       '<td><button onclick="delModalRow(this)" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:14px" title="删除">✕</button></td>' +
-    '</tr>';
+      '</tr>';
   }).join("");
   dropRows += '<tr><td colspan="5" style="padding:4px;text-align:left"><button onclick="addDropRow()" style="background:var(--surface2);border:1px dashed var(--border);border-radius:6px;color:var(--muted);cursor:pointer;padding:4px 12px;font-size:12px">+ 添加核心掉落</button></td></tr>';
 
