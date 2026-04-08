@@ -907,7 +907,7 @@ function loadRecommendations() {
         var roi = item.roi;
         var roiClass = roi >= 0 ? "roi" : "neg";
         var roiSign = roi >= 0 ? "+" : "";
-        var durMins = toMins(s.avg_duration) || 1;
+        var durMins = (function(d){var p=d.split(':').map(Number);return p.length===3?p[0]*60+p[1]+p[2]/60:p.length===2?p[0]+p[1]/60:1;})(s.avg_duration)||1;
         var runsPerHour = (60 / durMins).toFixed(1);
         var dropValue = item.drop_value || 0;
         var costVal = item.cost || 0;
