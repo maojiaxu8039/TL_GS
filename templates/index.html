@@ -1101,7 +1101,7 @@ function openModal(id) {
     return '<tr class="cost-row" data-idx="' + idx + '">' +
       '<td><input type="text" class="cost-name-input" data-type="cost" data-idx="' + idx + '" value="' + escHtml(item.name) + '" placeholder="输入物品名" onblur="onCostNameBlur(this)" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:4px 6px;font-size:12px" /></td>' +
       '<td style="color:var(--fire)" class="cost-price" data-price="' + (item.price || 0) + '">' + (item.price_display || "--") + '</td>' +
-      '<td><input type="number" class="cnt-input cost-cnt-input" data-type="cost" data-idx="' + idx + '" value="' + item.count + '" min="0" oninput="recalcModalTotals()" style="width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:3px 6px;font-size:12px;text-align:center" /></td>' +
+      '<td><input type="number" class="cnt-input cost-cnt-input" data-type="cost" data-idx="' + idx + '" data-price="' + (item.price || 0) + '" value="' + item.count + '" min="0" oninput="recalcModalTotals()" style="width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:3px 6px;font-size:12px;text-align:center" /></td>' +
       '<td style="color:var(--fire)" class="cost-total">' + (item.total_cost > 0 ? item.total_cost.toFixed(2) : "--") + '</td>' +
       '<td><button onclick="delModalRow(this)" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:14px" title="删除">✕</button></td>' +
     '</tr>';
