@@ -1049,6 +1049,18 @@ function renderRow(s, fp) {
   // 解析时长字符串为分钟数
   function parseDurationToMinutes(dur) {
     if (!dur) return 0;
+    // 格式1: HH:MM:SS 或 HH:MM 或 MM:SS
+    var colonMatch = dur.match(/^(\d+):(\d+)(:(\d+))?$/);
+    if (colonMatch) {
+      var parts = dur.split(":").map(Number);
+      if (parts.length === 3) {
+        return parts[0] * 60 + parts[1] + parts[2] / 60; // HH:MM:SS
+      } else if (parts.length === 2) {
+        // MM:SS（最常见，如 02:19）
+        return parts[0] + parts[1] / 60;
+      }
+    }
+    // 格式2: 带 h/m/s/小时/分/秒 后缀
     var hours = 0, mins = 0, secs = 0;
     var h = dur.match(/(\d+(?:\.\d+)?)\s*h|小时/);
     var m = dur.match(/(\d+)\s*m|分/);
