@@ -400,7 +400,7 @@ def api_strategy_top():
             "roi": roi,
             "drop_value": drop_fire,
             "cost": cost,
-            "profit": drop_fire - cost if cost > 0 else 0,
+            "profit": drop_fire - cost,
         })
     return jsonify({"fire_price": fire_price, "recommendations": result})
 
