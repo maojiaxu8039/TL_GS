@@ -317,90 +317,15 @@ body {
 }
 
 .rc-card {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-.rc-card:hover {
-  border-color: rgba(99,179,237,0.5);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-}
-.rc-rank {
-  position: absolute;
-  top: 10px; right: 10px;
-  font-size: 20px;
-  font-weight: 900;
-  line-height: 1;
-  color: rgba(99,179,237,0.15);
-}
-.rc-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.rc-name {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text);
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.rc-divider {
-  height: 1px;
-  background: var(--border);
-  margin: 8px 0;
-}
-.rc-row {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 6px;
-  flex-wrap: wrap;
-}
-.rc-stat2 {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  flex: 1;
-  min-width: 0;
-}
-.rc-stat2 .l {
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-}
-.rc-stat2 .v {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-  transform: scale(1.05);
-}
-
-/* ===== RECOMMEND CARDS (REDESIGNED) ===== */
-.rc-card {
-  background: var(--surface2);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 18px 20px;
+  padding: 16px 18px 14px;
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-height: 200px;
+  gap: 10px;
   position: relative;
   overflow: hidden;
 }
@@ -409,24 +334,49 @@ body {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #F19C2B, #FF4D00);
-  border-radius: 16px 16px 0 0;
-  opacity: 0.8;
+  background: linear-gradient(90deg, var(--fire), #ef4444);
+  opacity: 0.85;
 }
-.rc-card:hover { border-color: rgba(241,156,43,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.6); transform: translateY(-2px); }
+.rc-card:hover { border-color: rgba(245,158,11,0.4); box-shadow: 0 8px 32px rgba(0,0,0,0.5); transform: translateY(-2px); }
 .rc-card:hover::before { opacity: 1; }
-.rc-hdr { display: flex; flex-direction: column; gap: 8px; }
-.rc-title { font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.4; }
-.rc-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.rc-kpi { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; flex: 1; }
-.kpi-cell { flex: 1; padding: 12px 14px; text-align: center; border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; gap: 4px; }
-.kpi-cell:last-child { border-right: none; }
-.kpi-cell .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-.kpi-cell .kpi-val { font-size: 18px; font-weight: 900; letter-spacing: -0.5px; }
-.kpi-cell.kpi-profit.positive .kpi-val { color: var(--green); }
-.kpi-cell.kpi-profit.neg .kpi-val { color: var(--danger); }
-.rc-foot { display: flex; flex-direction: column; gap: 8px; }
-.rc-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+
+/* Header */
+.rc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.rc-name-row { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.rc-rank { font-size: 16px; flex-shrink: 0; }
+.rc-name { font-size: 16px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rc-badges { display: flex; gap: 5px; flex-shrink: 0; }
+
+/* Info row */
+.rc-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.rc-duration { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.rc-tags-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.rc-tag { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; font-size: 11px; color: var(--gold); }
+
+/* Stats row (DPS/survival) */
+.rc-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.rc-stat-item { display: flex; align-items: baseline; gap: 4px; }
+.rc-stat-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; }
+.rc-stat-val { font-size: 14px; font-weight: 700; }
+
+/* Hero profit section */
+.rc-hero { text-align: center; padding: 10px 0 6px; border-top: 1px solid var(--border); }
+.rc-ph-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.rc-ph-val { font-size: 28px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; }
+.rc-hero-pos .rc-ph-val { color: var(--green); }
+.rc-hero-neg .rc-ph-val { color: var(--danger); }
+
+/* Sub stats (drop/cost) */
+.rc-sub { display: flex; justify-content: center; gap: 20px; }
+.rc-sub-item { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.rc-sub-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; }
+.rc-sub-val { font-size: 14px; font-weight: 700; }
+
+/* Build images */
+.rc-imgs { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; padding-top: 2px; }
+.rc-thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1.5px solid rgba(99,179,237,0.3); cursor: pointer; transition: all 0.15s; }
+.rc-thumb:hover { border-color: rgba(99,179,237,0.8); transform: scale(1.06); }
+.rc-thumb-more { font-size: 11px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; }.rc-tags { display: flex; gap: 5px; flex-wrap: wrap; }
 .rc-buildimgs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .rc-buildthumb { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; border: 1.5px solid rgba(99,179,237,0.35); cursor: pointer; transition: all 0.15s; }
 .rc-buildthumb:hover { border-color: rgba(99,179,237,0.8); transform: scale(1.06); }
@@ -1029,38 +979,42 @@ function loadRecommendations() {
         var dpsVal = s.dps || 0;
         var survVal = s.survival || 0;
         var profit = item.profit;
-        var profitClass = profit >= 0 ? "roi" : "neg";
-        var profitSign = profit >= 0 ? "+" : "";
-        var rank = ["🥇","🥈","🥉"][i] || "";
-        var tagsHtml = (s.tags || []).map(function(t){ return '<span class="tag">' + escHtml(t) + '</span>'; }).join('');
-        var rankBadge = ['','🥇','🥈','🥉'][i+1] || ('<span style="font-size:16px;font-weight:900;color:rgba(245,158,11,0.2)">' + (i+1) + '</span>');
+        var profitPerHour = profit * (60 / durMins);
+        var perHourStr = profitPerHour >= 0 ? '+' + profitPerHour.toFixed(1) : profitPerHour.toFixed(1);
+        var heroClass = profit >= 0 ? 'rc-hero-pos' : 'rc-hero-neg';
+        var tagsHtml = (s.tags || []).map(function(t){ return '<span class="rc-tag">' + escHtml(t) + '</span>'; }).join('');
         var buildImgsHtml = (s.build_imgs && s.build_imgs.length > 0)
-          ? '<div class="rc-buildimgs">' + s.build_imgs.slice(0,4).map(function(url){
-              return '<img src="' + url + '" class="rc-buildthumb" onclick="event.stopPropagation();openImgPreview(this.src)" title="点击查看加点图" />';
-            }).join('') + (s.build_imgs.length > 4 ? '<span style="font-size:10px;color:var(--muted);align-self:center">+' + (s.build_imgs.length-4) + '</span>' : '') + '</div>'
+          ? '<div class="rc-imgs">' + s.build_imgs.slice(0,4).map(function(url){
+              return '<img src="' + url + '" class="rc-thumb" onclick="event.stopPropagation();openImgPreview(this.src)" />';
+            }).join('') + (s.build_imgs.length > 4 ? '<span class="rc-thumb-more">+' + (s.build_imgs.length-4) + '</span>' : '') + '</div>'
           : '';
-        var dpsHtml = dpsVal > 0 ? '<span style="color:#41D3A5">DPS值 ' + dpsVal.toLocaleString() + '</span>' : '';
-        var survHtml = survVal > 0 ? '<span style="color:#41D3A5">生存值 ' + survVal.toLocaleString() + '</span>' : '';
-        var attrHtml = (dpsHtml || survHtml) ? '<div style="display:flex;gap:16px;font-size:13px;color:var(--muted);margin-bottom:4px">' + dpsHtml + survHtml + '</div>' : '';
+        var dpsLine = dpsVal > 0 ? '<span class="rc-stat-item"><span class="rc-stat-lbl">DPS</span><span class="rc-stat-val" style="color:#41D3A5">' + dpsVal.toLocaleString() + '</span></span>' : '';
+        var survLine = survVal > 0 ? '<span class="rc-stat-item"><span class="rc-stat-lbl">生存</span><span class="rc-stat-val" style="color:#41D3A5">' + survVal.toLocaleString() + '</span></span>' : '';
         return '<div class="rc-card" onclick="openModal(' + s.id + ')">' +
-          '<div class="rc-hdr">' +
-            '<div class="rc-title">' + escHtml(s.name || "---") + '</div>' +
-            '<div class="rc-meta">' +
+          '<div class="rc-top">' +
+            '<div class="rc-name-row">' +
+              '<span class="rc-rank">' + (['🥇','🥈','🥉'][i] || '') + '</span>' +
+              '<span class="rc-name">' + escHtml(s.name || "---") + '</span>' +
+            '</div>' +
+            '<div class="rc-badges">' +
               '<span class="map-badge ' + escHtml(s.map) + '">' + escHtml(s.map || "--") + '</span>' +
               '<span class="diff-badge ' + escHtml(s.difficulty) + '">' + escHtml(s.difficulty || "--") + '</span>' +
-              '<span style="color:var(--muted);font-size:12px">⏱ ' + escHtml(s.avg_duration || "--") + '</span>' +
             '</div>' +
           '</div>' +
-          attrHtml +
-          '<div class="rc-kpi">' +
-            '<div class="kpi-cell kpi-fire"><div class="kpi-label">成本</div><div class="kpi-val" style="color:var(--fire)">' + (costVal > 0 ? costVal.toFixed(2) + '🔥' : '--') + '</div></div>' +
-            '<div class="kpi-cell kpi-fire"><div class="kpi-label">掉落</div><div class="kpi-val" style="color:var(--fire)">' + (dropValue > 0 ? dropValue.toFixed(2) + '🔥' : '--') + '</div></div>' +
-            '<div class="kpi-cell kpi-profit ' + profitClass + '"><div class="kpi-label">净收益/时</div><div class="kpi-val">' + profitSign + (profit * (60/durMins)).toFixed(1) + '🔥</div></div>' +
+          '<div class="rc-info">' +
+            '<span class="rc-duration">⏱ ' + escHtml(s.avg_duration || "--") + '</span>' +
+            '<span class="rc-tags-row">' + tagsHtml + '</span>' +
           '</div>' +
-          '<div class="rc-foot">' +
-            buildImgsHtml +
-            '<div class="rc-tags">' + tagsHtml + '</div>' +
+          (dpsLine || survLine ? '<div class="rc-stats">' + dpsLine + survLine + '</div>' : '') +
+          '<div class="rc-hero ' + heroClass + '">' +
+            '<div class="rc-ph-label">净收益/时</div>' +
+            '<div class="rc-ph-val">' + perHourStr + '🔥</div>' +
           '</div>' +
+          '<div class="rc-sub">' +
+            '<span class="rc-sub-item"><span class="rc-sub-lbl">掉落</span><span class="rc-sub-val" style="color:var(--fire)">' + (dropValue > 0 ? dropValue.toFixed(2) + '🔥' : '--') + '</span></span>' +
+            '<span class="rc-sub-item"><span class="rc-sub-lbl">成本</span><span class="rc-sub-val" style="color:var(--fire)">' + (costVal > 0 ? costVal.toFixed(2) + '🔥' : '--') + '</span></span>' +
+          '</div>' +
+          buildImgsHtml +
         '</div>';
       }).join("");
     })
