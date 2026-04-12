@@ -10,6 +10,7 @@
 - 🤖 **截图识别**：上传游戏截图，自动 OCR 解析成本物品 + 核心掉落，一键入库
 - 🏆 **ROI 推荐**：自动计算各玩法的投资回报率，首页展示 Top 3 推荐
 - 💾 **本地存储**：策略数据保存在 SQLite，本地持久化
+- 📤 **导出功能**：支持导出策略列表
 
 ---
 
@@ -21,94 +22,38 @@
 | 操作系统 | Windows 10+ / macOS / Linux |
 | 依赖 | Flask, PyYAML（见 `requirements.txt`）|
 
-> [!TIP]
-> 推荐同时安装 [TL_item_monitor](https://github.com/maojiaxu8039/TL_item_monitor)，用于获取实时火价数据。
-
 ---
 
-## 快速开始（Windows）
-
-### 第一步：下载项目
-
-点击页面右上角 **Code → Download ZIP**，解压到本地，例如：
-
-```
-D:\Projects\TL_GS\
-```
-
-### 第二步：安装依赖
-
-**方式 A：双击运行（推荐）**
-
-```
-双击 start.bat
-```
-
-首次运行会自动安装所需 Python 包。
-
-**方式 B：手动安装**
-
-```cmd
-cd D:\Projects\TL_GS
-pip install -r requirements.txt
-```
-
-### 第三步：配置数据库路径
-
-编辑 `config.yaml`，确认 `tl_item_monitor_db` 指向 TL_item_monitor 的数据库文件（两个项目在同一父目录下使用相对路径即可）：
-
-```yaml
-host: "0.0.0.0"
-port: 19878
-
-# 关联的 TL_item_monitor 数据库路径
-tl_item_monitor_db: "../TL_item_monitor/data/tl_monitor.db"
-
-# 策略数据文件路径
-strategies_file: "data/strategies.json"
-```
-
-### 第四步：启动
-
-双击 `start.bat`，看到以下输出表示启动成功：
-
-```
-TL_GS 启动中... http://0.0.0.0:19878
- * Running on http://127.0.0.1:19878
-```
-
-打开浏览器访问 **http://localhost:19878**
-
----
-
-## 快速开始（macOS / Linux）
-
-```bash
-cd TL_GS
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python server.py
-```
-
----
-
-## 外网访问
+## 快速开始
 
 ### Windows
 
-1. 确保 `config.yaml` 中 `host: "0.0.0.0"`
-2. 双击运行 `start_tunnel.bat`
-3. 等待出现 `https://xxxx.trycloudflare.com` 即可在外网访问
-
-> [!NOTE]
-> `start_tunnel.bat` 会自动下载 cloudflared，无需手动安装。
+1. 双击 `setup.bat` 安装依赖
+2. 编辑 `config.yaml` 配置数据库路径
+3. 双击 `start.bat` 启动
 
 ### macOS / Linux
 
 ```bash
-cloudflared tunnel --url http://localhost:19878
+pip install -r requirements.txt
+python3 server.py
 ```
+
+访问：**http://localhost:19889**
+
+---
+
+## 配置说明
+
+`config.yaml` 完整参数：
+
+| 字段 | 说明 | 默认值 |
+|------|------|--------|
+| `host` | 监听地址，`0.0.0.0` 表示外网可访问 | `127.0.0.1` |
+| `port` | 服务端口 | `19889` |
+| `tl_item_monitor_db` | TL_item_monitor_BD 数据库路径（绝对或相对路径） | 无 |
+| `strategies_file` | 策略 JSON 备份文件路径 | `data/strategies.json` |
+| `openai_api_key` | OpenAI API Key（用于截图识别，可不填） | 空 |
 
 ---
 
@@ -121,7 +66,7 @@ TL_GS/
 ├── requirements.txt       # Python 依赖
 ├── gs_db.py               # SQLite 数据库模块
 ├── start.bat              # Windows 一键启动脚本
-├── start_tunnel.bat       # Windows 外网隧道脚本
+├── setup.bat              # Windows 依赖安装脚本
 │
 ├── data/
 │   └── tl_gs.db          # 策略数据库（自动创建）
@@ -130,36 +75,8 @@ TL_GS/
 │   └── uploads/          # 截图上传目录
 │
 └── templates/
-    └── index.html       # 前端页面
+    └── index.html        # 前端页面
 ```
-
----
-
-## 配置文件说明
-
-| 字段 | 说明 | 默认值 |
-|------|------|--------|
-| `host` | 监听地址，`0.0.0.0` 表示外网可访问 | `127.0.0.1` |
-| `port` | 服务端口 | `19878` |
-| `tl_item_monitor_db` | TL_item_monitor 数据库路径（绝对或相对路径） | 无 |
-| `strategies_file` | 策略 JSON 备份文件路径 | `data/strategies.json` |
-| `openai_api_key` | OpenAI API Key（用于截图识别，可不填） | 空 |
-
----
-
-## 常见问题
-
-### Q: 启动报错 "No module named 'yaml'"
-A: 运行 `pip install -r requirements.txt` 安装依赖。
-
-### Q: 火价数据显示 "未连接"
-A: 检查 `config.yaml` 中 `tl_item_monitor_db` 路径是否正确指向 TL_item_monitor 的 `tl_monitor.db` 文件。
-
-### Q: 截图识别失败
-A: 确保截图包含完整的"玩法详情"弹窗内容，包含物品数量和名称。
-
-### Q: 想修改端口
-A: 编辑 `config.yaml` 中的 `port` 字段，重启服务生效。
 
 ---
 
@@ -177,11 +94,22 @@ A: 编辑 `config.yaml` 中的 `port` 字段，重启服务生效。
 
 ---
 
+## 常见问题
+
+| 问题 | 解决办法 |
+|------|----------|
+| 启动报错 "No module named 'yaml'" | 运行 `setup.bat` 安装依赖 |
+| 火价显示 "未连接" | 检查 `tl_item_monitor_db` 路径是否正确指向 TL_item_monitor_BD 的数据库 |
+| 截图识别失败 | 确保截图包含完整玩法详情弹窗 |
+| 端口被占用 | 修改 `config.yaml` 中 `port` |
+
+---
+
 ## 技术栈
 
 | 组件 | 技术 |
 |------|------|
 | 后端 | Flask + Python 3 |
-| 数据库 | SQLite（策略存储） + TL_item_monitor 数据库（火价数据） |
+| 数据库 | SQLite（策略存储）+ TL_item_monitor_BD 数据库（火价数据） |
 | 前端 | 原生 HTML/CSS/JS（无框架） |
 | OCR | cnocr（本地中文识别，需安装 onnxruntime） |

@@ -3,3 +3,7 @@ config.yaml
 __pycache__/
 *.pyc
 server.log
+data/tl_gs.db
+data/*.db
+static/uploads/*
+!static/uploads/.gitkeep

@@ -9,6 +9,8 @@ import os
 import base64
 import uuid
 import yaml
+import logging
+import logging.handlers
 import time
 import threading
 from pathlib import Path
@@ -17,6 +19,17 @@ import gs_db
 
 BASE_DIR = Path(__file__).parent
 CONFIG_PATH = BASE_DIR / "config.yaml"
+
+# 日志配置：单文件最大5MB，保留3个备份
+log_path = BASE_DIR / "server.log"
+file_handler = logging.handlers.RotatingFileHandler(
+    log_path, maxBytes=5*1024*1024, backupCount=3, encoding="utf-8"
+)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[file_handler, logging.StreamHandler()]
+)
 
 # 价格自动刷新（每小时一次）
 _last_price_refresh = 0
@@ -29,7 +42,7 @@ def load_config():
 cfg = load_config()
 TL_DB_PATH = BASE_DIR / cfg["tl_item_monitor_db"]
 STRATEGIES_FILE = BASE_DIR / cfg["strategies_file"]
-PORT = cfg.get("port", 19878)
+PORT = cfg.get("port", 19889)
 HOST = cfg.get("host", "127.0.0.1")
 UPLOAD_DIR = BASE_DIR / "static" / "uploads"
 
@@ -40,7 +53,7 @@ def reload_config():
     cfg = load_config()
     TL_DB_PATH = BASE_DIR / cfg["tl_item_monitor_db"]
     STRATEGIES_FILE = BASE_DIR / cfg["strategies_file"]
-    PORT = cfg.get("port", 19878)
+    PORT = cfg.get("port", 19889)
     HOST = cfg.get("host", "127.0.0.1")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
